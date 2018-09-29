@@ -22,14 +22,12 @@
     {
       "name": "Cocote",
       "email": "olivier.decan@cocote.com",
-      "homepage": "https://fr.cocote.com",
+      "homepage": "https://fr.cocote.com"
     }
   ],
   "autoload": {
     "files": [
       "registration.php"
-    ],
-    "psr-4": {
-      "Cocote\\Feed\\": ""
-    }
+    ]
   }
+}
