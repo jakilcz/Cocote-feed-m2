@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Cocote_Feed::grid" title="Cocote grid" translate="title" module="Cocote_Feed" parent="Magento_Catalog::inventory" sortOrder="999" dependsOnModule="Cocote_Feed" action="cocote/cocote/productsgrid" resource="Cocote_Feed::grid"/>
+    </menu>
+</config>
+  

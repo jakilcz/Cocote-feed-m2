@@ -1,0 +1,232 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="cocote_tab" translate="label" sortOrder="1001">
+            <label>Cocote</label>
+        </tab>
+        <section id="cocote" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="0" showInStore="0">
+            <class>cocote-section</class>
+            <label>Cocote feed configuration</label>
+            <tab>cocote_tab</tab>
+            <resource>Cocote_Feed::config</resource>
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Default values</label>
+
+                <field id="store" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Default store</label>
+                    <source_model>Cocote\Feed\Model\Config\Source\Stores</source_model>
+                </field>
+
+                <field id="map_name" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Map name attribute</label>
+                    <source_model>Cocote\Feed\Model\Config\Source\Attributes</source_model>
+                </field>
+
+                <field id="map_mpn" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Map MPN attribute</label>
+                    <source_model>Cocote\Feed\Model\Config\Source\Attributes</source_model>
+                </field>
+
+                <field id="map_gtin" translate="label" type="select" sortOrder="4" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Map Gtin attribute</label>
+                    <source_model>Cocote\Feed\Model\Config\Source\Attributes</source_model>
+                </field>
+
+                <field id="map_description" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Map Description attribute</label>
+                    <source_model>Cocote\Feed\Model\Config\Source\Attributes</source_model>
+                </field>
+
+                <field id="map_manufacturer" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Map Brand/Manufacturer attribute</label>
+                    <source_model>Cocote\Feed\Model\Config\Source\Attributes</source_model>
+                </field>
+
+                <field id="state" translate="label" type="select" sortOrder="9" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Default State</label>
+                    <source_model>Cocote\Feed\Model\Config\Source\State</source_model>
+                </field>
+
+
+                <field id="categories" translate="label,comment" type="multiselect" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Default Category</label>
+                    <comment>Only fill if all your products belongs to specific categories, keep empty else</comment>
+                    <source_model>Cocote\Feed\Model\Config\Source\Categories</source_model>
+                </field>
+                <field id="categories_sync" translate="label comment" type="button" sortOrder="11" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <frontend_model>Cocote\Feed\Block\System\Config\Syncbutton</frontend_model>
+                    <label>Update all products with default categories</label>
+                </field>
+
+                <field id="labels" translate="label,comment" type="multiselect" sortOrder="12" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Default Labels</label>
+                    <comment>Only fill if all your products belongs to specific labels, keep empty else</comment>
+                    <source_model>Cocote\Feed\Model\Config\Source\Labels</source_model>
+                </field>
+                <field id="labels_sync" translate="label comment" type="button" sortOrder="13" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <frontend_model>Cocote\Feed\Block\System\Config\Syncbutton</frontend_model>
+                    <label>Update all products with default labels</label>
+                </field>
+
+                <field id="targets" translate="label,comment" type="multiselect" sortOrder="14" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Default Targets</label>
+                    <comment>Only fill if all your products match specific people target (used for gift matching)  , keep empty else</comment>
+                    <source_model>Cocote\Feed\Model\Config\Source\Targets</source_model>
+                </field>
+                <field id="targets_sync" translate="label comment" type="button" sortOrder="15" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <frontend_model>Cocote\Feed\Block\System\Config\Syncbutton</frontend_model>
+                    <label>Update all products with default targets</label>
+                </field>
+
+                <field id="tags" translate="label,comment" type="multiselect" sortOrder="16" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Default Tags</label>
+                    <comment>Only fill if all your products match specific tag(s) , keep empty else</comment>
+                    <source_model>Cocote\Feed\Model\Config\Source\Tags</source_model>
+                </field>
+                <field id="tags_sync" translate="label comment" type="button" sortOrder="17" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <frontend_model>Cocote\Feed\Block\System\Config\Syncbutton</frontend_model>
+                    <label>Update all products with default tags</label>
+                </field>
+
+                <field id="producer" translate="label,comment" type="select" sortOrder="18" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Default Producer</label>
+                    <comment>Only fill if all your products are done by you or not, keep empty else</comment>
+                    <source_model>Cocote\Feed\Model\Config\Source\Producer</source_model>
+                </field>
+                <field id="producer_sync" translate="label comment" type="button" sortOrder="19" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <frontend_model>Cocote\Feed\Block\System\Config\Syncbutton</frontend_model>
+                    <label>Update all products with default producer</label>
+                </field>
+
+                <field id="salestypes" translate="label,comment" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Default Sale types</label>
+                    <comment>Only fill if all your products are selled online / onplace, keep empty else</comment>
+                    <source_model>Cocote\Feed\Model\Config\Source\Salestypes</source_model>
+                </field>
+                <field id="salestypes_sync" translate="label comment" type="button" sortOrder="21" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <frontend_model>Cocote\Feed\Block\System\Config\Syncbutton</frontend_model>
+                    <label>Update all products with default sale types</label>
+                </field>
+
+
+                <field id="payment_online" translate="label,comment" type="multiselect" sortOrder="22" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Default Payment online</label>
+                    <comment>Only fill if all your products match same allowed online payments, keep empty else</comment>
+                    <source_model>Cocote\Feed\Model\Config\Source\Payments</source_model>
+                </field>
+                <field id="payment_online_sync" translate="label comment" type="button" sortOrder="23" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <frontend_model>Cocote\Feed\Block\System\Config\Syncbutton</frontend_model>
+                    <label>Update all products with default payment online</label>
+                </field>
+
+
+                <field id="payment_onsite" translate="label,comment" type="multiselect" sortOrder="24" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Default Payment onsite</label>
+                    <comment>Only fill if all your products match same allowed onplace payments, keep empty else</comment>
+                    <source_model>Cocote\Feed\Model\Config\Source\Payments</source_model>
+                </field>
+                <field id="payment_onsite_sync" translate="label comment" type="button" sortOrder="25" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <frontend_model>Cocote\Feed\Block\System\Config\Syncbutton</frontend_model>
+                    <label>Update all products with default payment onsite</label>
+                </field>
+
+                <field id="allowed_distance" translate="label,comment" type="text" sortOrder="26" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Default Allowed distance</label>
+                    <comment>The radius in which the offer must appear in the visitors results (when the visitor communicates his position)</comment>
+                </field>
+                <field id="allowed_distance_sync" translate="label comment" type="button" sortOrder="27" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <frontend_model>Cocote\Feed\Block\System\Config\Syncbutton</frontend_model>
+                    <label>Update all products with default allowed distance</label>
+                </field>
+
+                <field id="shipping" translate="label comment tooltip" sortOrder="100" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Shipping</label>
+                    <comment>Example: Type: Colissimo, 3 day delivery, start from: 9.45€, free_from: 59€</comment>
+                    <frontend_model>Cocote\Feed\Block\System\Config\Shipping</frontend_model>
+                    <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                </field>
+            </group>
+            <group id="specific" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Specific values</label>
+                <field id="link" translate="label comment" type="button" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <frontend_model>Cocote\Feed\Block\System\Config\Gridlink</frontend_model>
+                    <label>Please go to link below to specify products specific values</label>
+                </field>
+            </group>
+            <group id="location" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Location</label>
+                <field id="place_online_road" translate="label,comment" type="text" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Road</label>
+                    <comment>Precise here the adress from here are shipped your online products</comment>
+                </field>
+                <field id="place_online_city" translate="label,comment" type="text" sortOrder="2" showInDefault="2" showInWebsite="0" showInStore="0">
+                    <label>City</label>
+                </field>
+                <field id="place_online_zipcode" translate="label,comment" type="text" sortOrder="3" showInDefault="2" showInWebsite="0" showInStore="0">
+                    <label>Zipcode</label>
+                </field>
+
+
+                <field id="place_online_getcoordinates" translate="label comment" type="button" sortOrder="4" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <frontend_model>Cocote\Feed\Block\System\Config\Getcoordsonline</frontend_model>
+                    <label>Get coordinates</label>
+                </field>
+
+                <field id="place_online_latitude" translate="label,comment" type="text" sortOrder="5" showInDefault="2" showInWebsite="0" showInStore="0">
+                    <label>Latitude</label>
+                </field>
+                <field id="place_online_longitude" translate="label,comment" type="text" sortOrder="6" showInDefault="2" showInWebsite="0" showInStore="0">
+                    <label>Longitude</label>
+                </field>
+                <field id="place_online_the_same" translate="label,comment" type="checkbox" sortOrder="7" showInDefault="2" showInWebsite="0" showInStore="0">
+                    <comment>Do adress from where online product are shipped is the same than your shop physical adress?</comment>
+                    <frontend_model>Cocote\Feed\Block\System\Config\Checkbox</frontend_model>
+                </field>
+
+                <field id="place_onsite_road" translate="label,comment" type="text" sortOrder="11" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Road</label>
+                    <comment>Precise here the adress from here are shipped your online products</comment>
+                </field>
+                <field id="place_onsite_city" translate="label,comment" type="text" sortOrder="12" showInDefault="2" showInWebsite="0" showInStore="0">
+                    <label>City</label>
+                </field>
+                <field id="place_onsite_zipcode" translate="label,comment" type="text" sortOrder="13" showInDefault="2" showInWebsite="0" showInStore="0">
+                    <label>Zipcode</label>
+                </field>
+
+
+                <field id="place_onsite_getcoordinates" translate="label comment" type="button" sortOrder="14" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <frontend_model>Cocote\Feed\Block\System\Config\Getcoordsonsite</frontend_model>
+                    <label>Get coordinates</label>
+                </field>
+
+                <field id="place_onsite_latitude" translate="label,comment" type="text" sortOrder="15" showInDefault="2" showInWebsite="0" showInStore="0">
+                    <label>Latitude</label>
+                </field>
+                <field id="place_onsite_longitude" translate="label,comment" type="text" sortOrder="16" showInDefault="2" showInWebsite="0" showInStore="0">
+                    <label>Longitude</label>
+                </field>
+
+            </group>
+            <group id="generate" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Feed generating</label>
+                <field id="path" translate="label,comment" type="text" sortOrder="1" showInDefault="2" showInWebsite="0" showInStore="0">
+                    <label>Generated file path</label>
+                    <comment>Directory where feed file will be placed. Counts from /pub directory. No slashes at the end or begining needed. If folder doesn't exist we'll try to create it</comment>
+                </field>
+                <field id="generate" translate="label comment" type="button" sortOrder="2" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <frontend_model>Cocote\Feed\Block\System\Config\Generatebutton</frontend_model>
+                    <label>Generate feed</label>
+                </field>
+                <field id="link" translate="label comment" type="button" sortOrder="3" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <frontend_model>Cocote\Feed\Block\System\Config\Linkfeed</frontend_model>
+                    <label>Link to feed</label>
+                </field>
+
+
+            </group>
+
+
+        </section>
+    </system>
+</config>
