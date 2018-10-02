@@ -8,7 +8,6 @@ use Magento\Framework\Data\Form\Element\AbstractElement;
 
 class Linkfeed extends Field
 {
-
     protected $helper;
 
     public function __construct(
@@ -16,47 +15,33 @@ class Linkfeed extends Field
         Context $context,
         array $data = []
     ) {
-      $this->helper=$helper;
+        $this->helper=$helper;
         parent::__construct($context, $data);
     }
 
-
     protected function _getElementHtml(\Magento\Framework\Data\Form\Element\AbstractElement $element)
     {
-
         $url = $this->helper->getFileLink();
 
-        stream_context_set_default(
-            array(
-                'http' => array(
-                    'method' => 'HEAD'
-                )
-            )
-        );
-//        $headers = get_headers($url, 1);
-//        $fileFound = stristr($headers[0], '200');
+        stream_context_set_default(['http' => ['method' => 'HEAD']]);
 
-        if($this->remote_file_exists($url)) {
+        if ($this->remote_file_exists($url)) {
             $html='<a target="_blank" href="'.$url.'">'.$url.'</a>';
-        }
-        else {
+        } else {
             $html=$url;
-
         }
-
         return $html;
     }
     
-function remote_file_exists($url)
-{
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_NOBODY, true);
-    curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
-    if( $httpCode == 200 ){return true;}
-}    
-
+    function remote_file_exists($url)
+    {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_NOBODY, true);
+        curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        if($httpCode == 200) {
+            return true;
+        }
+    }
 }
-
-?>

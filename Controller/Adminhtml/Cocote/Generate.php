@@ -31,7 +31,7 @@ class Generate extends \Magento\Backend\App\Action
             $this->messageManager->addSuccessMessage(__("Generating done"));
         }
 
-        catch (Exception $e) {
+        catch (\Exception $e) {
             $this->messageManager->addErrorMessage($e->getMessage());
         }
         $resultRedirect = $this->resultRedirect->create(ResultFactory::TYPE_REDIRECT);
@@ -41,4 +41,3 @@ class Generate extends \Magento\Backend\App\Action
     }
 
 }
-?>

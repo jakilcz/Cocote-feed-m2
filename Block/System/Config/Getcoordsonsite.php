@@ -16,7 +16,6 @@ class Getcoordsonsite extends Field
         parent::__construct($context, $data);
     }
 
-
     protected function _getElementHtml(\Magento\Framework\Data\Form\Element\AbstractElement $element) {
 
         $alertMessage=addslashes(__("Can't get coordinates"));
@@ -27,13 +26,13 @@ class Getcoordsonsite extends Field
         $html =$this->getLayout()->createBlock(
             'Magento\Backend\Block\Widget\Button'
         )->setData(
-                [
-                    'id' => $element->getHtmlId(),
-                    'label' => __('Get coordinates'),
-                ]
-            )
-            ->setOnClick("getCoordsOnsite();")
-            ->toHtml();
+            [
+                'id' => $element->getHtmlId(),
+                'label' => __('Get coordinates'),
+            ]
+        )
+        ->setOnClick("getCoordsOnsite();")
+        ->toHtml();
 
         $html .= "
 
@@ -69,5 +68,3 @@ class Getcoordsonsite extends Field
         return $html;
     }
 }
-
-?>

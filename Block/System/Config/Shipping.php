@@ -41,10 +41,11 @@ class Shipping extends \Magento\Config\Block\System\Config\Form\Field\FieldArray
      * 
      * @return \Magento\Braintree\Block\Adminhtml\Form\Field\Countries
      */
-    protected function getRenderer() {
+    protected function getRenderer()
+    {
         if (!$this->renderer) {
             $this->renderer = $this->getLayout()->createBlock(
-                    '\Cocote\Feed\Block\Adminhtml\Form\Field\ShippingType', '', ['data' => ['is_render_to_js_template' => true]]
+                '\Cocote\Feed\Block\Adminhtml\Form\Field\ShippingType', '', ['data' => ['is_render_to_js_template' => true]]
             );
         }
         return $this->renderer;
@@ -55,21 +56,18 @@ class Shipping extends \Magento\Config\Block\System\Config\Form\Field\FieldArray
      *
      * @return void
      */
-    protected function _prepareToRender() {
-        $this->addColumn('type', array('label' => __('Type')));
-        $this->addColumn(
-                'delay', [
-            'label' => __('Delay'),
-            'renderer' => $this->getRenderer(),
-                ]
-        );
-        $this->addColumn('value_from', array('label' => __('Value from')));
-        $this->addColumn('free_after', array('label' => __('Free after')));
+    protected function _prepareToRender()
+    {
+        $this->addColumn('type', ['label' => __('Type')]);
+        $this->addColumn('delay', ['label' => __('Delay'),'renderer' => $this->getRenderer()]);
+        $this->addColumn('value_from', ['label' => __('Value from')]);
+        $this->addColumn('free_after', ['label' => __('Free after')]);
         $this->_addAfter = false;
         $this->_addButtonLabel = __('Add');
     }
 
-    protected function _prepareArrayRow(\Magento\Framework\DataObject $row) {
+    protected function _prepareArrayRow(\Magento\Framework\DataObject $row)
+    {
         $delay = $row->getDelay();
         $options = [];
         if ($delay) {
@@ -89,7 +87,6 @@ class Shipping extends \Magento\Config\Block\System\Config\Form\Field\FieldArray
         if ($columnName == "delay") {
             $this->_columns[$columnName]['style'] = 'width:150px';
         }
-
         return parent::renderCellTemplate($columnName);
     }
 }

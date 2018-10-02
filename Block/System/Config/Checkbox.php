@@ -37,5 +37,3 @@ class Checkbox extends Field
     }
 
 }
-
-?>

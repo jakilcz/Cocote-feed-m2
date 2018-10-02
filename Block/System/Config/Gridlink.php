@@ -32,5 +32,3 @@ class Gridlink extends Field
     }
 
 }
-
-?>

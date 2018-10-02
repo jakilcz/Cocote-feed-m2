@@ -4,14 +4,14 @@ namespace Cocote\Feed\Model\Config\Source;
 
 class Producer extends SourceAbstract
 {
-    public function getValues() {
-        $types=array(
-            '---'=>'',
-            'Oui'=>'oui',
-            'Non'=>'non',
-        );
+    public function getValues()
+    {
+        $types=[
+            '---' => '',
+            'Oui' => 'oui',
+            'Non' => 'non',
+        ];
 
         return $types;
-   }
-
+    }
 }

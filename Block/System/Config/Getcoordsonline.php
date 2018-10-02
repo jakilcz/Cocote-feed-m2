@@ -16,9 +16,8 @@ class Getcoordsonline extends Field
         parent::__construct($context, $data);
     }
 
-
-    protected function _getElementHtml(\Magento\Framework\Data\Form\Element\AbstractElement $element) {
-
+    protected function _getElementHtml(\Magento\Framework\Data\Form\Element\AbstractElement $element)
+    {
         $alertMessage=addslashes(__("Can't get coordinates"));
         $errorMessage=addslashes(__("temporary geolocalisation issue , please retry after or insert coord manually"));
 
@@ -26,14 +25,10 @@ class Getcoordsonline extends Field
 
         $html =$this->getLayout()->createBlock(
             'Magento\Backend\Block\Widget\Button'
-        )->setData(
-                [
-                    'id' => $element->getHtmlId(),
-                    'label' => __('Get coordinates'),
-                ]
-            )
-            ->setOnClick("getCoordsOnline();")
-            ->toHtml();
+        )
+        ->setData(['id' => $element->getHtmlId(),'label' => __('Get coordinates')])
+        ->setOnClick("getCoordsOnline();")
+        ->toHtml();
 
         $html .= "
 
@@ -69,5 +64,3 @@ class Getcoordsonline extends Field
         return $html;
     }
 }
-
-?>

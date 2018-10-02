@@ -2,8 +2,8 @@
 
 namespace Cocote\Feed\Cron;
 
-class Generate {
-    
+class Generate
+{
     protected $helper;
 
     public function __construct(
@@ -11,11 +11,10 @@ class Generate {
         \Cocote\Feed\Helper\Data $helper
     ) {
         $this->helper=$helper;
-        //$appState->setAreaCode('adminhtml'); // or 'frontend', depending on your needs
-    
     }
 
-    public function execute() {
+    public function execute()
+    {
         $this->helper->generateFeed();
     }
 }

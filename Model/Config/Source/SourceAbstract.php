@@ -9,7 +9,7 @@ class SourceAbstract extends \Magento\Eav\Model\Entity\Attribute\Source\Abstract
 
     protected $feedUrl='https://fr.cocote.com/api/connector/fields';
     protected $cacheType;
-
+    
     public function __construct(\Cocote\Feed\Model\Cache\Type $cacheType)
     {
         $this->cacheType = $cacheType;
@@ -24,7 +24,6 @@ class SourceAbstract extends \Magento\Eav\Model\Entity\Attribute\Source\Abstract
     public function getAllOptions()
     {
         $values=$this->getValues();
-
         $options=array();
 
         foreach($values as $group=>$labels) {
@@ -66,8 +65,8 @@ class SourceAbstract extends \Magento\Eav\Model\Entity\Attribute\Source\Abstract
         ];
     }
 
-    public function getValuesFromApi($fieldId) {
-
+    public function getValuesFromApi($fieldId)
+    {
         $json = file_get_contents($this->feedUrl);
         $obj = json_decode($json);
         $fields=$obj->Response->fields;
@@ -91,8 +90,8 @@ class SourceAbstract extends \Magento\Eav\Model\Entity\Attribute\Source\Abstract
         return $valuesArray;
     }
 
-    public function getValuesFromCache($fieldId) {
-
+    public function getValuesFromCache($fieldId)
+    {
         $lifetime=3600*24;
 
         $cachedValues=$this->cacheType->load('cocote_values_'.$fieldId);
@@ -106,7 +105,4 @@ class SourceAbstract extends \Magento\Eav\Model\Entity\Attribute\Source\Abstract
 
         return $apiValues;
     }
-
-
-
 }

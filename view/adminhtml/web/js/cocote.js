@@ -44,6 +44,11 @@ require(
             jQuery("#cocote_general_producer_sync_message").show();
         });
 
+        jQuery("#cocote_general_state").change(function() {
+            jQuery("#cocote_general_state_sync").hide();
+            jQuery("#cocote_general_state_sync_message").show();
+        });
+
         jQuery("#cocote_general_salestypes").change(function() {
             jQuery("#cocote_general_salestypes_sync").hide();
             jQuery("#cocote_general_salestypes_sync_message").show();

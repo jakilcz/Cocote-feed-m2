@@ -75,7 +75,4 @@ class Syncprods extends \Magento\Backend\App\Action
             }
         }
     }
-
-
 }
-?>

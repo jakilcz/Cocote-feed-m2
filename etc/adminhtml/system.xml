@@ -43,8 +43,12 @@
                 </field>
 
                 <field id="state" translate="label" type="select" sortOrder="9" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Default State</label>
+                    <label>Default State of product</label>
                     <source_model>Cocote\Feed\Model\Config\Source\State</source_model>
+                </field>
+                <field id="state_sync" translate="label comment" type="button" sortOrder="9" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <frontend_model>Cocote\Feed\Block\System\Config\Syncbutton</frontend_model>
+                    <label>Update all products with default state</label>
                 </field>
 
 
@@ -145,6 +149,14 @@
                     <frontend_model>Cocote\Feed\Block\System\Config\Shipping</frontend_model>
                     <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
                 </field>
+
+                <field id="discount" translate="label comment tooltip" sortOrder="101" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Discount</label>
+                    <comment>Example: Description: -10% for whole site, condition:from 50€ with code BIENVENUE10</comment>
+                    <frontend_model>Cocote\Feed\Block\System\Config\Discount</frontend_model>
+                    <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                </field>
+
             </group>
             <group id="specific" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
             <label>Specific values</label>

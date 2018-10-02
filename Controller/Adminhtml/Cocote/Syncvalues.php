@@ -31,7 +31,6 @@ class Syncvalues extends \Magento\Backend\App\Action
         \Magento\Framework\Controller\ResultFactory $result,
         \Magento\Framework\Message\ManagerInterface $messageManager,
         \Magento\Framework\App\Request\Http $request
-
     ) {
         parent::__construct($context);
         $this->resultPageFactory = $resultPageFactory;
@@ -43,7 +42,6 @@ class Syncvalues extends \Magento\Backend\App\Action
         $this->request = $request;
     }
 
-
     public function execute()
     {
         $attribute=$this->request->getParam('attribute');
@@ -52,31 +50,29 @@ class Syncvalues extends \Magento\Backend\App\Action
 
         try {
             $prodctIds=$this->getProductCollectionIds();
-            $this->updateAttributeValue($prodctIds,$attribute,$value);
+            $this->updateAttributeValue($prodctIds, $attribute, $value);
             $this->messageManager->addSuccessMessage(__($attribute." have been updated"));
         }
-
-        catch (Exception $e) {
+        catch (\Exception $e) {
                 $this->messageManager->addErrorMessage($e->getMessage());
         }
-
 
         $resultRedirect = $this->resultRedirect->create(ResultFactory::TYPE_REDIRECT);
         $resultRedirect->setUrl($this->_redirect->getRefererUrl());
         return $resultRedirect;
     }
 
-    public function getProductCollectionIds() {
-
+    public function getProductCollectionIds()
+    {
         $collection = $this->productCollectionFactory->create();
         //$collection->addAttributeToFilter('status', ['in' => $this->productStatus->getVisibleStatusIds()]);
         $collection->setVisibility($this->productVisibility->getVisibleInSiteIds());
         $ids=$collection->getAllIds();
         return $ids;
-
     }
 
-    public function updateAttributeValue($prodIds,$attribute,$value) {
+    public function updateAttributeValue($prodIds, $attribute, $value)
+    {
         $attributeName='cocote_'.$attribute;
         set_time_limit(0); // unlimited max execution time
 
@@ -84,13 +80,10 @@ class Syncvalues extends \Magento\Backend\App\Action
 
         $storeId=0;
 
-        foreach($prodIds as $productId) {
-            if($productId) {
+        foreach ($prodIds as $productId) {
+            if ($productId) {
                 $action->updateAttributes([$productId], [$attributeName => $value], $storeId);
             }
         }
     }
-
-
 }
-?>

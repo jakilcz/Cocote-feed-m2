@@ -78,6 +78,7 @@ class InstallData implements InstallDataInterface
             ['code'=>'cocote_targets','label'=>'Cocote targets','source'=>'Cocote\Feed\Model\Config\Source\Targets','type'=>'multiselect'],
             ['code'=>'cocote_tags','label'=>'Cocote tags','source'=>'Cocote\Feed\Model\Config\Source\Tags','type'=>'multiselect'],
             ['code'=>'cocote_producer','label'=>'Cocote producer','source'=>'Cocote\Feed\Model\Config\Source\Producer','type'=>'select'],
+            ['code'=>'cocote_state','label'=>'Cocote state','source'=>'Cocote\Feed\Model\Config\Source\State','type'=>'select'],
             ['code'=>'cocote_salestypes','label'=>'Cocote salestypes','source'=>'Cocote\Feed\Model\Config\Source\Salestypes','type'=>'multiselect'],
             ['code'=>'cocote_payment_online','label'=>'Cocote payment online','source'=>'Cocote\Feed\Model\Config\Source\Payments','type'=>'multiselect'],
             ['code'=>'cocote_payment_onsite','label'=>'Cocote payment online','source'=>'Cocote\Feed\Model\Config\Source\Payments','type'=>'multiselect'],
@@ -85,31 +86,35 @@ class InstallData implements InstallDataInterface
 
 
         foreach($attributesToInstall as $attributeData) {
+            $data=[
+                'group' => 'Cocote',
+                'type' => 'varchar',
+                'backend' => '',
+                'frontend' => '',
+                'label' => $attributeData['label'],
+                'input' => $attributeData['type'],
+                'class' => '',
+                'source' => $attributeData['source'],
+                'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
+                'visible' => true,
+                'required' => false,
+                'user_defined' => true,
+                'default' => '',
+                'searchable' => false,
+                'filterable' => false,
+                'comparable' => false,
+                'visible_on_front' => false,
+                'used_in_product_listing' => true,
+                'unique' => false
+            ];
+            if($attributeData['type']=='multiselect') {
+                $data['backend'] ='Magento\Eav\Model\Entity\Attribute\Backend\ArrayBackend';
+            }
+
             $eavSetup->removeAttribute(\Magento\Catalog\Model\Product::ENTITY,$attributeData['code']);
             $eavSetup->addAttribute(
                 \Magento\Catalog\Model\Product::ENTITY,
-                $attributeData['code'],
-                [
-                    'group' => 'Cocote',
-                    'type' => 'varchar',
-                    'backend' => '',
-                    'frontend' => '',
-                    'label' => $attributeData['label'],
-                    'input' => $attributeData['type'],
-                    'class' => '',
-                    'source' => $attributeData['source'],
-                    'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
-                    'visible' => true,
-                    'required' => false,
-                    'user_defined' => true,
-                    'default' => '',
-                    'searchable' => false,
-                    'filterable' => false,
-                    'comparable' => false,
-                    'visible_on_front' => false,
-                    'used_in_product_listing' => true,
-                    'unique' => false
-                ]
+                $attributeData['code'], $data
             );
         }
 
@@ -138,7 +143,5 @@ class InstallData implements InstallDataInterface
                 'unique' => false
             ]
         );
-
-
     }
 }
