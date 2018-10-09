@@ -283,6 +283,11 @@ class Data extends AbstractHelper
         }
         $currentprod->appendChild($discountTag);
 
+        $sponsorship=$domtree->createElement('sponsorship');
+        $sponsorship->setAttribute('godfather_advantage',$this->scopeConfig->getValue('cocote/general/godfather_advantage', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
+        $sponsorship->setAttribute('godson_advantage',$this->scopeConfig->getValue('cocote/general/godson_advantage', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
+        $sponsorship->setAttribute('details_url',$this->scopeConfig->getValue('cocote/general/sponsorship_url', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
+        $currentprod->appendChild($sponsorship);
 
         $domtree->save($filePath);
     }

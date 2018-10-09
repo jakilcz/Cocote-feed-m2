@@ -151,11 +151,22 @@
                 </field>
 
                 <field id="discount" translate="label comment tooltip" sortOrder="101" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Discount</label>
+                    <label>Discount fields</label>
                     <comment>Example: Description: -10% for whole site, condition:from 50€ with code BIENVENUE10</comment>
                     <frontend_model>Cocote\Feed\Block\System\Config\Discount</frontend_model>
                     <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
                 </field>
+
+                <field id="godfather_advantage" translate="label,comment" type="text" sortOrder="111" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Godfather advantage</label>
+                </field>
+                <field id="godson_advantage" translate="label,comment" type="text" sortOrder="112" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Godson advantage</label>
+                </field>
+                <field id="sponsorship_url" translate="label,comment" type="text" sortOrder="113" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Details URL</label>
+                </field>
+
 
             </group>
             <group id="specific" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
@@ -171,10 +182,10 @@
                     <label>Road</label>
                     <comment>Precise here the adress from here are shipped your online products</comment>
                 </field>
-                <field id="place_online_city" translate="label,comment" type="text" sortOrder="2" showInDefault="2" showInWebsite="0" showInStore="0">
+                <field id="place_online_city" translate="label,comment" type="text" sortOrder="2" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>City</label>
                 </field>
-                <field id="place_online_zipcode" translate="label,comment" type="text" sortOrder="3" showInDefault="2" showInWebsite="0" showInStore="0">
+                <field id="place_online_zipcode" translate="label,comment" type="text" sortOrder="3" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Zipcode</label>
                 </field>
 
@@ -184,25 +195,25 @@
                     <label>Get coordinates</label>
                 </field>
 
-                <field id="place_online_latitude" translate="label,comment" type="text" sortOrder="5" showInDefault="2" showInWebsite="0" showInStore="0">
+                <field id="place_online_latitude" translate="label,comment" type="text" sortOrder="5" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Latitude</label>
                 </field>
-                <field id="place_online_longitude" translate="label,comment" type="text" sortOrder="6" showInDefault="2" showInWebsite="0" showInStore="0">
+                <field id="place_online_longitude" translate="label,comment" type="text" sortOrder="6" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Longitude</label>
                 </field>
-                <field id="place_online_the_same" translate="label,comment" type="checkbox" sortOrder="7" showInDefault="2" showInWebsite="0" showInStore="0">
+                <field id="place_online_the_same" translate="label,comment" type="checkbox" sortOrder="7" showInDefault="1" showInWebsite="0" showInStore="0">
                     <comment>Do adress from where online product are shipped is the same than your shop physical adress?</comment>
                     <frontend_model>Cocote\Feed\Block\System\Config\Checkbox</frontend_model>
                 </field>
 
                 <field id="place_onsite_road" translate="label,comment" type="text" sortOrder="11" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Road</label>
-                    <comment>Precise here the adress from here are shipped your online products</comment>
+                    <comment>Precise here the adress from here are shipped your onsite products</comment>
                 </field>
-                <field id="place_onsite_city" translate="label,comment" type="text" sortOrder="12" showInDefault="2" showInWebsite="0" showInStore="0">
+                <field id="place_onsite_city" translate="label,comment" type="text" sortOrder="12" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>City</label>
                 </field>
-                <field id="place_onsite_zipcode" translate="label,comment" type="text" sortOrder="13" showInDefault="2" showInWebsite="0" showInStore="0">
+                <field id="place_onsite_zipcode" translate="label,comment" type="text" sortOrder="13" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Zipcode</label>
                 </field>
 
@@ -212,17 +223,17 @@
                     <label>Get coordinates</label>
                 </field>
 
-                <field id="place_onsite_latitude" translate="label,comment" type="text" sortOrder="15" showInDefault="2" showInWebsite="0" showInStore="0">
+                <field id="place_onsite_latitude" translate="label,comment" type="text" sortOrder="15" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Latitude</label>
                 </field>
-                <field id="place_onsite_longitude" translate="label,comment" type="text" sortOrder="16" showInDefault="2" showInWebsite="0" showInStore="0">
+                <field id="place_onsite_longitude" translate="label,comment" type="text" sortOrder="16" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Longitude</label>
                 </field>
 
             </group>
             <group id="generate" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>Feed generating</label>
-                <field id="path" translate="label,comment" type="text" sortOrder="1" showInDefault="2" showInWebsite="0" showInStore="0">
+                <field id="path" translate="label,comment" type="text" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Generated file path</label>
                     <comment>Directory where feed file will be placed. Counts from /pub directory. No slashes at the end or begining needed. If folder doesn't exist we'll try to create it</comment>
                 </field>

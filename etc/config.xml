@@ -11,7 +11,6 @@
                 <map_manufacturer>manufacturer</map_manufacturer>
                 <producer>non</producer>
                 <shipping>{"_1535235759429_429":{"type":"Collissimo","delay":"-3d","value_from":"9.45","free_after":"59"}}</shipping>
-                <discount>{"_1538514654897_897":{"description":"-10% sur tout le site","conditions":"d\u00e8s 50\u20ac d'achat avec le code BIENVENUE10"}}</discount>
             </general>
             <location>
                 <place_online_road>10 Place Charles de Gaulle</place_online_road>
