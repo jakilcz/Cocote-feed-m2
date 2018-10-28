@@ -2,7 +2,7 @@
 
 namespace Cocote\Feed\Setup;
 
-use Magento\Eav\Setup\EavSetup; 
+use Magento\Eav\Setup\EavSetup;
 use Magento\Eav\Setup\EavSetupFactory /* For Attribute create  */;
 use Magento\Framework\Setup\InstallDataInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
@@ -30,11 +30,11 @@ class InstallData implements InstallDataInterface
      *
      * @param EavSetupFactory $eavSetupFactory
      */
-    public function __construct(EavSetupFactory $eavSetupFactory,
+    public function __construct(
+        EavSetupFactory $eavSetupFactory,
         AttributeSetFactory $attributeSetFactory,
         CategorySetupFactory $categorySetupFactory
-    )
-    {
+    ) {
         $this->eavSetupFactory = $eavSetupFactory;
         $this->attributeSetFactory = $attributeSetFactory;
         $this->categorySetupFactory = $categorySetupFactory;
@@ -47,13 +47,11 @@ class InstallData implements InstallDataInterface
      */
     public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
-
-
-
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $attributeSets = $objectManager->create(\Magento\Catalog\Model\Product\AttributeSet\Options::class);
         $attributeSetIds=[];
-        foreach($attributeSets->toOptionArray() as $attrSet) {
+
+        foreach ($attributeSets->toOptionArray() as $attrSet) {
             $attributeSetIds[]=$attrSet['value'];
         }
 
@@ -62,12 +60,9 @@ class InstallData implements InstallDataInterface
 
         $groupName = 'Cocote';
 
-
-        foreach($attributeSetIds as $attributeSetId) {
+        foreach ($attributeSetIds as $attributeSetId) {
             $categorySetup->addAttributeGroup($entityTypeId, $attributeSetId, $groupName, 60);
         }
-
-
 
         /** @var EavSetup $eavSetup */
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
@@ -81,11 +76,12 @@ class InstallData implements InstallDataInterface
             ['code'=>'cocote_state','label'=>'Cocote state','source'=>'Cocote\Feed\Model\Config\Source\State','type'=>'select'],
             ['code'=>'cocote_salestypes','label'=>'Cocote salestypes','source'=>'Cocote\Feed\Model\Config\Source\Salestypes','type'=>'multiselect'],
             ['code'=>'cocote_payment_online','label'=>'Cocote payment online','source'=>'Cocote\Feed\Model\Config\Source\Payments','type'=>'multiselect'],
-            ['code'=>'cocote_payment_onsite','label'=>'Cocote payment online','source'=>'Cocote\Feed\Model\Config\Source\Payments','type'=>'multiselect'],
+//            ['code'=>'cocote_payment_onsite','label'=>'Cocote payment online','source'=>'Cocote\Feed\Model\Config\Source\Payments','type'=>'multiselect'],
+            ['code'=>'cocote_types','label'=>'Cocote types','source'=>'Cocote\Feed\Model\Config\Source\Types','type'=>'multiselect'],
+
         ];
 
-
-        foreach($attributesToInstall as $attributeData) {
+        foreach ($attributesToInstall as $attributeData) {
             $data=[
                 'group' => 'Cocote',
                 'type' => 'varchar',
@@ -107,18 +103,19 @@ class InstallData implements InstallDataInterface
                 'used_in_product_listing' => true,
                 'unique' => false
             ];
-            if($attributeData['type']=='multiselect') {
+            if ($attributeData['type']=='multiselect') {
                 $data['backend'] ='Magento\Eav\Model\Entity\Attribute\Backend\ArrayBackend';
             }
 
-            $eavSetup->removeAttribute(\Magento\Catalog\Model\Product::ENTITY,$attributeData['code']);
+            $eavSetup->removeAttribute(\Magento\Catalog\Model\Product::ENTITY, $attributeData['code']);
             $eavSetup->addAttribute(
                 \Magento\Catalog\Model\Product::ENTITY,
-                $attributeData['code'], $data
+                $attributeData['code'],
+                $data
             );
         }
 
-        $eavSetup->removeAttribute(\Magento\Catalog\Model\Product::ENTITY,'cocote_allowed_distance');
+        $eavSetup->removeAttribute(\Magento\Catalog\Model\Product::ENTITY, 'cocote_allowed_distance');
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
             'cocote_allowed_distance',

@@ -19,7 +19,8 @@ class Distance extends \Magento\Ui\Component\Listing\Columns\Column
         $this->backendUrl = $backendUrl;
     }
 
-    public function prepareDataSource(array $dataSource) {
+    public function prepareDataSource(array $dataSource)
+    {
         if (isset($dataSource['data']['items'])) {
             foreach ($dataSource['data']['items'] as & $item) {
                 $item[$this->attribute]=$this->getSelect($item);
@@ -28,12 +29,13 @@ class Distance extends \Magento\Ui\Component\Listing\Columns\Column
         return $dataSource;
     }
 
-    public function getSelect($item) {
+    public function getSelect($item)
+    {
         $id=$item['entity_id'];
         $ajaxUrl = $this->backendUrl->getUrl('cocote/cocote/syncprods');
         $value='';
         if (isset($item[$this->attribute])) {
-          $value=$item[$this->attribute];
+            $value=$item[$this->attribute];
         }
 
         $html='<input value="'.$value.'" type="text" data-attr_name="'.$this->attribute.'" data-id="'.$id.'" id="'.$this->attribute.'_select_'.$id.'" style="width:150px;"  onchange="changeVal(this,\''.$ajaxUrl.'\')" />';

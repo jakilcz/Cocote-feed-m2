@@ -2,7 +2,8 @@
 
 namespace Cocote\Feed\Block\System\Config;
 
-class Discount extends \Magento\Config\Block\System\Config\Form\Field\FieldArray\AbstractFieldArray {
+class Discount extends \Magento\Config\Block\System\Config\Form\Field\FieldArray\AbstractFieldArray
+{
 
     /**
      * Grid columns
@@ -31,7 +32,8 @@ class Discount extends \Magento\Config\Block\System\Config\Form\Field\FieldArray
      *
      * @return void
      */
-    protected function _construct() {
+    protected function _construct()
+    {
         parent::_construct();
         $this->_addButtonLabel = __('Add');
     }

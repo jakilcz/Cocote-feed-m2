@@ -16,11 +16,10 @@ class Getcoordsonsite extends Field
         parent::__construct($context, $data);
     }
 
-    protected function _getElementHtml(\Magento\Framework\Data\Form\Element\AbstractElement $element) {
+    protected function _getElementHtml(\Magento\Framework\Data\Form\Element\AbstractElement $element)
+    {
 
-        $alertMessage=addslashes(__("Can't get coordinates"));
         $errorMessage=addslashes(__("temporary geolocalisation issue , please retry after or insert coord manually"));
-
         $key='AIzaSyBzNYZwGM07VrBKgH_xbuRwsOYm8IJfKyk';
 
         $html =$this->getLayout()->createBlock(

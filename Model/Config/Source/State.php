@@ -5,12 +5,12 @@ class State extends SourceAbstract
 {
     public function getValues()
     {
-        $types=[
+        $values=[
             '---'=>'',
             'Nouveau'=>'new',
             'Occasion'=>'second_hand',
         ];
 
-        return $types;
+        return $values;
     }
 }

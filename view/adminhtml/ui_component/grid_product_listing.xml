@@ -41,6 +41,7 @@
                 <item name="config" xsi:type="array">
                     <item name="applied" xsi:type="array">
                         <item name="visibility" xsi:type="string">4</item>
+                        <item name="status" xsi:type="string">1</item>
                     </item>
                 </item>
             </argument>
@@ -88,6 +89,15 @@
                 <filter>select</filter>
                 <dataType>select</dataType>
                 <label translate="true">Visibility</label>
+            </settings>
+        </column>
+        <column name="status" component="Magento_Ui/js/grid/columns/select" sortOrder="51">
+            <settings>
+                <addField>true</addField>
+                <options class="Magento\Catalog\Model\Product\Attribute\Source\Status"/>
+                <filter>select</filter>
+                <dataType>select</dataType>
+                <label translate="true">Status</label>
             </settings>
         </column>
         <column name="cocote_labels" class="Cocote\Feed\Ui\Component\Listing\Column\Labels" sortOrder="80">
@@ -186,12 +196,12 @@
                 <addField>true</addField>
             </settings>
         </column>
-        <column name="cocote_payment_onsite" class="Cocote\Feed\Ui\Component\Listing\Column\PaymentOnsite" sortOrder="87">
+        <column name="cocote_types" class="Cocote\Feed\Ui\Component\Listing\Column\Types" sortOrder="87">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="filter" xsi:type="string">false</item>
                     <item name="bodyTmpl" xsi:type="string">ui/grid/cells/html</item>
-                    <item name="label" xsi:type="string" translate="true">Cocote payment onsite</item>
+                    <item name="label" xsi:type="string" translate="true">Cocote product type</item>
                 </item>
             </argument>
             <settings>

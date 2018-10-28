@@ -33,7 +33,6 @@ class Syncprods extends \Magento\Backend\App\Action
         \Magento\Framework\Message\ManagerInterface $messageManager,
         \Magento\Framework\App\Request\Http $request,
         \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory
-
     ) {
         parent::__construct($context);
         $this->resultPageFactory = $resultPageFactory;
@@ -49,28 +48,27 @@ class Syncprods extends \Magento\Backend\App\Action
 
     public function execute()
     {
-        
-       $attribute=$this->request->getParam('attr');
-       $id=$this->request->getParam('id');
-       $value=$this->request->getParam('value');
-       if(is_array($value)) {
-           $value=implode(',',$value);
-       }
+        $attribute=$this->request->getParam('attr');
+        $id=$this->request->getParam('id');
+        $value=$this->request->getParam('value');
+        if (is_array($value)) {
+            $value=implode(',', $value);
+        }
 
-       $this->updateAttributeValue([$id],$attribute,$value);
-       $message=__('Product updated');
-       return  $this->resultJsonFactory->create()->setData(['msg' => $message]);
+        $this->updateAttributeValue([$id], $attribute, $value);
+        $message=__('Product updated');
+        return  $this->resultJsonFactory->create()->setData(['msg' => $message]);
     }
 
-    public function updateAttributeValue($prodIds,$attribute,$value) {
+    public function updateAttributeValue($prodIds, $attribute, $value)
+    {
         set_time_limit(0); // unlimited max execution time
+        $storeId=0;
 
         $action = $this->_objectManager->get('\Magento\Catalog\Model\ResourceModel\Product\Action');
 
-        $storeId=0;
-
-        foreach($prodIds as $productId) {
-            if($productId) {
+        foreach ($prodIds as $productId) {
+            if ($productId) {
                 $action->updateAttributes([$productId], [$attribute => $value], $storeId);
             }
         }

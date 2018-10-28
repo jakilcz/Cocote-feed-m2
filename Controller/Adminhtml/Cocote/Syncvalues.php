@@ -52,8 +52,7 @@ class Syncvalues extends \Magento\Backend\App\Action
             $prodctIds=$this->getProductCollectionIds();
             $this->updateAttributeValue($prodctIds, $attribute, $value);
             $this->messageManager->addSuccessMessage(__($attribute." have been updated"));
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
                 $this->messageManager->addErrorMessage($e->getMessage());
         }
 

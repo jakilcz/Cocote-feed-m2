@@ -21,6 +21,8 @@ class Data extends AbstractHelper
     protected $storeManager;
     protected $priceHelper;
     protected $configInterface;
+    protected $stockHelper;
+    protected $cacheTypeList;
 
     public function __construct(
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
@@ -28,9 +30,11 @@ class Data extends AbstractHelper
         \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $productCollectionFactory,
         \Magento\Catalog\Model\Product\Visibility $productVisibility,
         \Magento\Framework\App\State $appState,
+        \Magento\CatalogInventory\Helper\Stock $stockHelper,
         GalleryReadHandler $galleryReadHandler,
         StoreManagerInterface $storeManager,
         \Magento\Framework\Pricing\Helper\Data $priceHelper,
+        \Magento\Framework\App\Cache\TypeListInterface $cacheTypeList,
         Context $context
     ) {
         $this->scopeConfig = $scopeConfig;
@@ -40,13 +44,15 @@ class Data extends AbstractHelper
         $this->galleryReadHandler = $galleryReadHandler;
         $this->storeManager=$storeManager;
         $this->priceHelper=$priceHelper;
+        $this->stockHelper=$stockHelper;
+        $this->cacheTypeList = $cacheTypeList;
 
         parent::__construct($context);
     }
 
     public function getFileLink()
     {
-        $path=$this->scopeConfig->getValue('cocote/generate/path', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $path=$this->getConfigValue('cocote/generate/path');
         $baseUrl=$this->storeManager->getStore()->getBaseUrl();
         return $baseUrl.'pub/'.$path.'/'.$this->getFileName();
     }
@@ -56,7 +62,7 @@ class Data extends AbstractHelper
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $directory = $objectManager->get('\Magento\Framework\Filesystem\DirectoryList');
 
-        $path=$this->scopeConfig->getValue('cocote/generate/path', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $path=$this->getConfigValue('cocote/generate/path');
 
         $dirPath=$directory->getPath('pub').'/'.$path;
 
@@ -69,12 +75,14 @@ class Data extends AbstractHelper
 
     public function getFileName()
     {
-        $fileName=$this->scopeConfig->getValue('cocote/generate/filename', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $fileName=$this->getConfigValue('cocote/generate/filename');
 
         if (!$fileName) {
             $fileName=$this->generateRandomString().'.xml';
             $this->configInterface
                 ->saveConfig('cocote/generate/filename', $fileName, 'default', 0);
+            $this->cacheTypeList->cleanType(\Magento\Framework\App\Cache\Type\Config::TYPE_IDENTIFIER);
+            $this->cacheTypeList->cleanType(\Magento\PageCache\Model\Cache\Type::TYPE_IDENTIFIER);
         }
         return $fileName;
     }
@@ -92,7 +100,7 @@ class Data extends AbstractHelper
 
     public function getProductCollection()
     {
-        $storeCode=$this->scopeConfig->getValue('cocote/general/store', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $storeCode=$this->getConfigValue('cocote/general/store');
         if (!$storeCode) {
             $storeCode='default';
         }
@@ -115,6 +123,13 @@ class Data extends AbstractHelper
         $collection->addAttributeToSelect('cocote_payment_online');
         $collection->addAttributeToSelect('cocote_payment_onsite');
         $collection->addAttributeToSelect('cocote_allowed_distance');
+        $collection->addAttributeToSelect('cocote_types');
+        $collection->addFieldToFilter('status', ['eq' => \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED]);
+
+        $inStockOnly=$this->getConfigValue('cocote/generate/in_stock_only');
+        if ($inStockOnly) {
+            $this->stockHelper->addInStockFilterToCollection($collection);
+        }
 
         foreach ($this->mapping as $attribute) {
             $collection->addAttributeToSelect($attribute);
@@ -127,11 +142,11 @@ class Data extends AbstractHelper
         $filePath=$this->getFilePath();
         $store = $this->storeManager->getStore();
 
-        $mapName=$this->scopeConfig->getValue('cocote/general/map_name', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        $mapMpn=$this->scopeConfig->getValue('cocote/general/map_mpn', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        $mapGtin=$this->scopeConfig->getValue('cocote/general/map_gtin', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        $mapDescription=$this->scopeConfig->getValue('cocote/general/map_description', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        $mapManufacturer=$this->scopeConfig->getValue('cocote/general/map_manufacturer', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $mapName=$this->getConfigValue('cocote/general/map_name');
+        $mapMpn=$this->getConfigValue('cocote/general/map_mpn');
+        $mapGtin=$this->getConfigValue('cocote/general/map_gtin');
+        $mapDescription=$this->getConfigValue('cocote/general/map_description');
+        $mapManufacturer=$this->getConfigValue('cocote/general/map_manufacturer');
 
         if ($mapName) {
             $this->mapping['title']=$mapName;
@@ -146,15 +161,24 @@ class Data extends AbstractHelper
             $this->mapping['description']=$mapDescription;
         }
         if ($mapManufacturer) {
-            $this->mapping['marque']=$mapManufacturer;
+            $this->mapping['brand']=$mapManufacturer;
         }
 
         $productCollection = $this->getProductCollection();
 
         $domtree = new \DOMDocument('1.0', 'UTF-8');
 
-        $xmlRoot = $domtree->createElement("offers");
+        $xmlRoot = $domtree->createElement("shop");
         $xmlRoot = $domtree->appendChild($xmlRoot);
+
+        $sponsorship=$domtree->createElement('sponsorship');
+        $sponsorship->setAttribute('godfather_advantage', $this->getConfigValue('cocote/general/godfather_advantage'));
+        $sponsorship->setAttribute('godson_advantage', $this->getConfigValue('cocote/general/godson_advantage'));
+        $sponsorship->setAttribute('details_url', $this->getConfigValue('cocote/general/sponsorship_url'));
+        $xmlRoot->appendChild($sponsorship);
+
+        $offers = $domtree->createElement("offers");
+        $offers = $xmlRoot->appendChild($offers);
 
         foreach ($productCollection as $product) {
             $imageLink='';
@@ -176,11 +200,11 @@ class Data extends AbstractHelper
             }
 
             $currentprod = $domtree->createElement("item");
-            $currentprod = $xmlRoot->appendChild($currentprod);
+            $currentprod = $offers->appendChild($currentprod);
 
             $url=$product->getProductUrl();
 
-            $currentprod->appendChild($domtree->createElement('id', $product->getId()));
+            $currentprod->appendChild($domtree->createElement('identifier', $product->getId()));
             $currentprod->appendChild($domtree->createElement('price', $this->priceHelper->currency($product->getFinalPrice(), true, false)));
             $currentprod->appendChild($domtree->createElement('link', $url));
 
@@ -214,48 +238,63 @@ class Data extends AbstractHelper
             $salesTypes=str_replace(',', '|', $product->getData('cocote_salestypes'));
             $currentprod->appendChild($domtree->createElement('sale_type', $salesTypes));
 
+            $types=str_replace(',', '|', $product->getData('cocote_types'));
+            $currentprod->appendChild($domtree->createElement('type', $types));
+
             $paymentOnline=str_replace(',', '|', $product->getData('cocote_payment_online'));
             $currentprod->appendChild($domtree->createElement('payment_online', $paymentOnline));
-
-            $paymentOnsite=str_replace(',', '|', $product->getData('cocote_payment_onsite'));
-            $currentprod->appendChild($domtree->createElement('payment_onsite', $paymentOnsite));
 
             $currentprod->appendChild($domtree->createElement('producer', $product->getData('cocote_producer')));
             $currentprod->appendChild($domtree->createElement('state', $product->getData('cocote_state')));
             $currentprod->appendChild($domtree->createElement('distance', $product->getData('cocote_allowed_distance')));
             $currentprod->appendChild($domtree->createElement('targets', $this->mergeText($product->getData('cocote_targets'))));
 
+            $placesOnline=$domtree->createElement('places_online');
             $placeOnline=$domtree->createElement('place_online');
-            $placeOnline->setAttribute('lat', $this->scopeConfig->getValue('cocote/location/place_online_latitude', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
-            $placeOnline->setAttribute('lon', $this->scopeConfig->getValue('cocote/location/place_online_longitude', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
-            $placeOnline->setAttribute('road', $this->scopeConfig->getValue('cocote/location/place_online_road', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
-            $placeOnline->setAttribute('zipcode', $this->scopeConfig->getValue('cocote/location/place_online_zipcode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
-            $placeOnline->setAttribute('city', $this->scopeConfig->getValue('cocote/location/place_online_city', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
-            $currentprod->appendChild($placeOnline);
+            $placeOnline->setAttribute('lat', $this->getConfigValue('cocote/location/place_online_latitude'));
+            $placeOnline->setAttribute('lon', $this->getConfigValue('cocote/location/place_online_longitude'));
+            $placeOnline->setAttribute('road', $this->getConfigValue('cocote/location/place_online_road'));
+            $placeOnline->setAttribute('zipcode', $this->getConfigValue('cocote/location/place_online_zipcode'));
+            $placeOnline->setAttribute('city', $this->getConfigValue('cocote/location/place_online_city'));
+            $placeOnline->setAttribute('phone', $this->getConfigValue('cocote/location/place_online_phone'));
+            $placeOnline->setAttribute('mobile', $this->getConfigValue('cocote/location/place_online_mobile'));
+            $placeOnline->setAttribute('email', $this->getConfigValue('cocote/location/place_online_email'));
 
-            $placeOnsite=$domtree->createElement('place_onsite');
-            $place=$domtree->createElement('place');
+            $currentprod->appendChild($placesOnline);
+            $placesOnline->appendChild($placeOnline);
 
-            if ($this->scopeConfig->getValue('cocote/location/place_online_the_same', \Magento\Store\Model\ScopeInterface::SCOPE_STORE)) {
-                $place->setAttribute('lat', $this->scopeConfig->getValue('cocote/location/place_online_latitude', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
-                $place->setAttribute('lon', $this->scopeConfig->getValue('cocote/location/place_online_longitude', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
-                $place->setAttribute('road', $this->scopeConfig->getValue('cocote/location/place_online_road', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
-                $place->setAttribute('zipcode', $this->scopeConfig->getValue('cocote/location/place_online_zipcode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
-                $place->setAttribute('city', $this->scopeConfig->getValue('cocote/location/place_online_city', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
+            $placesOnsite=$domtree->createElement('places_onsite');
+            $place=$domtree->createElement('place_onsite');
+
+            if ($this->getConfigValue('cocote/location/place_online_the_same')) {
+                $place->setAttribute('lat', $this->getConfigValue('cocote/location/place_online_latitude'));
+                $place->setAttribute('lon', $this->getConfigValue('cocote/location/place_online_longitude'));
+                $place->setAttribute('road', $this->getConfigValue('cocote/location/place_online_road'));
+                $place->setAttribute('zipcode', $this->getConfigValue('cocote/location/place_online_zipcode'));
+                $place->setAttribute('city', $this->getConfigValue('cocote/location/place_online_city'));
+                $place->setAttribute('phone', $this->getConfigValue('cocote/location/place_online_phone'));
+                $place->setAttribute('mobile', $this->getConfigValue('cocote/location/place_online_mobile'));
+                $place->setAttribute('email', $this->getConfigValue('cocote/location/place_online_email'));
             } else {
-                $place->setAttribute('lat', $this->scopeConfig->getValue('cocote/location/place_onsite_latitude', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
-                $place->setAttribute('lon', $this->scopeConfig->getValue('cocote/location/place_onsite_longitude', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
-                $place->setAttribute('road', $this->scopeConfig->getValue('cocote/location/place_onsite_road', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
-                $place->setAttribute('zipcode', $this->scopeConfig->getValue('cocote/location/place_onsite_zipcode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
-                $place->setAttribute('city', $this->scopeConfig->getValue('cocote/location/place_onsite_city', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
+                $place->setAttribute('lat', $this->getConfigValue('cocote/location/place_onsite_latitude'));
+                $place->setAttribute('lon', $this->getConfigValue('cocote/location/place_onsite_longitude'));
+                $place->setAttribute('road', $this->getConfigValue('cocote/location/place_onsite_road'));
+                $place->setAttribute('zipcode', $this->getConfigValue('cocote/location/place_onsite_zipcode'));
+                $place->setAttribute('city', $this->getConfigValue('cocote/location/place_onsite_city'));
+                $place->setAttribute('phone', $this->getConfigValue('cocote/location/place_onsite_phone'));
+                $place->setAttribute('mobile', $this->getConfigValue('cocote/location/place_onsite_mobile'));
+                $place->setAttribute('email', $this->getConfigValue('cocote/location/place_onsite_email'));
             }
 
-            $currentprod->appendChild($placeOnsite);
-            $placeOnsite->appendChild($place);
+            $currentprod->appendChild($placesOnsite);
+            $placesOnsite->appendChild($place);
+
+            $paymentOnsite=str_replace(',', '|', $this->getConfigValue('cocote/general/payment_onsite'));
+            $place->appendChild($domtree->createElement('payment_onsite', $paymentOnsite));
 
             $shippingCostTag=$domtree->createElement('shiping_cost');
 
-            $shippingCosts = $this->scopeConfig->getValue('cocote/general/shipping', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+            $shippingCosts = $this->getConfigValue('cocote/general/shipping');
             if ($shippingCosts) {
                 $shippingCosts = json_decode($shippingCosts);
                 foreach ($shippingCosts as $shippingCostsRow) {
@@ -271,7 +310,7 @@ class Data extends AbstractHelper
         }
 
         $discountTag=$domtree->createElement('offer_list');
-        $discount = $this->scopeConfig->getValue('cocote/general/discount', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $discount = $this->getConfigValue('cocote/general/discount');
         if ($discount) {
             $discount = json_decode($discount);
             foreach ($discount as $discountRow) {
@@ -282,12 +321,6 @@ class Data extends AbstractHelper
             }
         }
         $currentprod->appendChild($discountTag);
-
-        $sponsorship=$domtree->createElement('sponsorship');
-        $sponsorship->setAttribute('godfather_advantage',$this->scopeConfig->getValue('cocote/general/godfather_advantage', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
-        $sponsorship->setAttribute('godson_advantage',$this->scopeConfig->getValue('cocote/general/godson_advantage', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
-        $sponsorship->setAttribute('details_url',$this->scopeConfig->getValue('cocote/general/sponsorship_url', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
-        $currentprod->appendChild($sponsorship);
 
         $domtree->save($filePath);
     }
@@ -302,5 +335,10 @@ class Data extends AbstractHelper
     public function addGallery($product)
     {
         $this->galleryReadHandler->execute($product);
+    }
+
+    public function getConfigValue($path)
+    {
+        return $this->scopeConfig->getValue($path, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 }

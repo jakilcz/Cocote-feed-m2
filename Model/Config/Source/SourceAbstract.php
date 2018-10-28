@@ -15,7 +15,6 @@ class SourceAbstract extends \Magento\Eav\Model\Entity\Attribute\Source\Abstract
         $this->cacheType = $cacheType;
     }
 
-
     /**
      * Get all options
      *
@@ -24,24 +23,19 @@ class SourceAbstract extends \Magento\Eav\Model\Entity\Attribute\Source\Abstract
     public function getAllOptions()
     {
         $values=$this->getValues();
-        $options=array();
+        $options=[];
 
-        foreach($values as $group=>$labels) {
-            if(is_array($labels)) {
-                $data=array();
-                foreach($labels as $labelName=>$labelCode) {
-                    $data[]=array('label'=>$labelName,'value'=>$labelCode);      //here we can add translation
+        foreach ($values as $group => $labels) {
+            if (is_array($labels)) {
+                $data=[];
+                foreach ($labels as $labelName => $labelCode) {
+                    $data[]=['label'=>$labelName,'value'=>$labelCode];      //here we can add translation
                 }
-                $options[]=array('label'=>$group,'value'=>$data);
-            }
-            else {
-                $options[]=array(
-                    'value'=>$labels,
-                    'label'=>$group
-                );
+                $options[]=['label'=>$group,'value'=>$data];
+            } else {
+                $options[]=['value'=>$labels, 'label'=>$group];
             }
         }
-
         return $options;
     }
 
@@ -71,16 +65,15 @@ class SourceAbstract extends \Magento\Eav\Model\Entity\Attribute\Source\Abstract
         $obj = json_decode($json);
         $fields=$obj->Response->fields;
 
-        $valuesArray=array();
+        $valuesArray=[];
 
-        foreach($fields as $field) {
-            if($field->identifier==$fieldId) {
-                foreach($field->availableValues as $value) {
-                    if(isset($value->value)) {
+        foreach ($fields as $field) {
+            if ($field->identifier==$fieldId) {
+                foreach ($field->availableValues as $value) {
+                    if (isset($value->value)) {
                         $valuesArray[$value->label]=$value->value;
-                    }
-                    else {
-                        foreach($value->children as $child) {
+                    } else {
+                        foreach ($value->children as $child) {
                             $valuesArray[$value->label][$child->label]=$child->value;
                         }
                     }
@@ -93,15 +86,14 @@ class SourceAbstract extends \Magento\Eav\Model\Entity\Attribute\Source\Abstract
     public function getValuesFromCache($fieldId)
     {
         $lifetime=3600*24;
-
         $cachedValues=$this->cacheType->load('cocote_values_'.$fieldId);
-        if($cachedValues) {
+        if ($cachedValues) {
             return unserialize(stripslashes($cachedValues));
         }
 
         $apiValues= $this->getValuesFromApi($fieldId);
         $cachedValues=addslashes(serialize($apiValues));
-        $this->cacheType->save($cachedValues,'cocote_values_'.$fieldId,[\Cocote\Feed\Model\Cache\Type::CACHE_TAG],$lifetime);
+        $this->cacheType->save($cachedValues, 'cocote_values_'.$fieldId, [\Cocote\Feed\Model\Cache\Type::CACHE_TAG], $lifetime);
 
         return $apiValues;
     }

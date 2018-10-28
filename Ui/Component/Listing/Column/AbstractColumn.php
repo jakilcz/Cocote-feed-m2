@@ -31,13 +31,14 @@ class AbstractColumn extends \Magento\Ui\Component\Listing\Columns\Column
         return $dataSource;
     }
 
-    public function getSelect($item) {
+    public function getSelect($item)
+    {
         $options=$this->getOptions();
         $id=$item['entity_id'];
         $ajaxUrl = $this->backendUrl->getUrl('cocote/cocote/syncprods');
         $value=[];
 
-        if(isset($item[$this->attribute])) {
+        if (isset($item[$this->attribute])) {
             $value=explode(',', $item[$this->attribute]);
         }
 
@@ -52,15 +53,17 @@ class AbstractColumn extends \Magento\Ui\Component\Listing\Columns\Column
                 $html.= '<optgroup label="' . $option['label'] . '">';
                 foreach ($option['value'] as $groupItem) {
                     $selected='';
-                    if (in_array($groupItem['value'], $value))
+                    if (in_array($groupItem['value'], $value)) {
                         $selected='selected="selected"';
+                    }
                     $html.='<option value="'.$groupItem['value'].'" '.$selected.' >'.$groupItem['label'].'</option>';
                 }
                 $html .= '</optgroup>';
             } else {
                 $selected='';
-                if (in_array($option['value'], $value))
+                if (in_array($option['value'], $value)) {
                     $selected='selected="selected"';
+                }
                 $html.='<option value="'.$option['value'].'" '.$selected.' >'.$option['label'].'</option>';
             }
         }

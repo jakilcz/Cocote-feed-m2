@@ -2,8 +2,8 @@
 
 namespace Cocote\Feed\Block\System\Config;
 
-class Shipping extends \Magento\Config\Block\System\Config\Form\Field\FieldArray\AbstractFieldArray {
-
+class Shipping extends \Magento\Config\Block\System\Config\Form\Field\FieldArray\AbstractFieldArray
+{
     /**
      * Grid columns
      *
@@ -31,21 +31,24 @@ class Shipping extends \Magento\Config\Block\System\Config\Form\Field\FieldArray
      *
      * @return void
      */
-    protected function _construct() {
+    protected function _construct()
+    {
         parent::_construct();
         $this->_addButtonLabel = __('Add');
     }
 
     /**
      * Returns renderer for country element
-     * 
+     *
      * @return \Magento\Braintree\Block\Adminhtml\Form\Field\Countries
      */
     protected function getRenderer()
     {
         if (!$this->renderer) {
             $this->renderer = $this->getLayout()->createBlock(
-                '\Cocote\Feed\Block\Adminhtml\Form\Field\ShippingType', '', ['data' => ['is_render_to_js_template' => true]]
+                '\Cocote\Feed\Block\Adminhtml\Form\Field\ShippingType',
+                '',
+                ['data' => ['is_render_to_js_template' => true]]
             );
         }
         return $this->renderer;
@@ -74,7 +77,7 @@ class Shipping extends \Magento\Config\Block\System\Config\Form\Field\FieldArray
             $options['option_' . $this->getRenderer()->calcOptionHash($delay)] = 'selected="selected"';
         }
         $row->setData('option_extra_attrs', $options);
-        }
+    }
     /**
      * Render array cell for prototypeJS template
      *

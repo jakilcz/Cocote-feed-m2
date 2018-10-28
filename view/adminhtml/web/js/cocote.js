@@ -54,6 +54,11 @@ require(
             jQuery("#cocote_general_salestypes_sync_message").show();
         });
 
+        jQuery("#cocote_general_types").change(function() {
+            jQuery("#cocote_general_types_sync").hide();
+            jQuery("#cocote_general_types_sync_message").show();
+        });
+
         jQuery("#cocote_general_payment_online").change(function() {
             jQuery("#cocote_general_payment_online_sync").hide();
             jQuery("#cocote_general_payment_online_sync_message").show();
@@ -82,11 +87,8 @@ require(
             jQuery("#row_cocote_general_store").hide();
         }
 
-
     }
 );
-
-
 
 function checkTheSameAddress() {
     if(jQuery('#cocote_location_place_online_the_same').is(':checked')) {
@@ -96,6 +98,9 @@ function checkTheSameAddress() {
         jQuery("#row_cocote_location_place_onsite_longitude").hide();
         jQuery("#row_cocote_location_place_onsite_latitude").hide();
         jQuery("#row_cocote_location_place_onsite_getcoordinates").hide();
+        jQuery("#row_cocote_location_place_onsite_phone").hide();
+        jQuery("#row_cocote_location_place_onsite_mobile").hide();
+        jQuery("#row_cocote_location_place_onsite_email").hide();
     }
     else {
         jQuery("#row_cocote_location_place_onsite_road").show();
@@ -104,6 +109,8 @@ function checkTheSameAddress() {
         jQuery("#row_cocote_location_place_onsite_longitude").show();
         jQuery("#row_cocote_location_place_onsite_latitude").show();
         jQuery("#row_cocote_location_place_onsite_getcoordinates").show();
+        jQuery("#row_cocote_location_place_onsite_phone").show();
+        jQuery("#row_cocote_location_place_onsite_mobile").show();
+        jQuery("#row_cocote_location_place_onsite_email").show();
     }
-
 }

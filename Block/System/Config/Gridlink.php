@@ -30,5 +30,4 @@ class Gridlink extends Field
         <span><span>'.__('Now, Customize your products for each').'</span></span></button>';
         return $html;
     }
-
 }

@@ -29,15 +29,11 @@ class Generate extends \Magento\Backend\App\Action
         try {
             $this->helper->generateFeed();
             $this->messageManager->addSuccessMessage(__("Generating done"));
-        }
-
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             $this->messageManager->addErrorMessage($e->getMessage());
         }
         $resultRedirect = $this->resultRedirect->create(ResultFactory::TYPE_REDIRECT);
         $resultRedirect->setUrl($this->_redirect->getRefererUrl());
         return $resultRedirect;
-
     }
-
 }
