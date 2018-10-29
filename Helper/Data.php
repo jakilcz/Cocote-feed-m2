@@ -292,13 +292,13 @@ class Data extends AbstractHelper
             $paymentOnsite=str_replace(',', '|', $this->getConfigValue('cocote/general/payment_onsite'));
             $place->appendChild($domtree->createElement('payment_onsite', $paymentOnsite));
 
-            $shippingCostTag=$domtree->createElement('shiping_cost');
+            $shippingCostTag=$domtree->createElement('shipping_costs');
 
             $shippingCosts = $this->getConfigValue('cocote/general/shipping');
             if ($shippingCosts) {
                 $shippingCosts = json_decode($shippingCosts);
                 foreach ($shippingCosts as $shippingCostsRow) {
-                    $shippingChoice=$domtree->createElement('shiping_choice');
+                    $shippingChoice=$domtree->createElement('shipping_choice');
                     $shippingChoice->setAttribute('type', $shippingCostsRow->type);
                     $shippingChoice->setAttribute('delay', $shippingCostsRow->delay);
                     $shippingChoice->setAttribute('value_from', $shippingCostsRow->value_from);

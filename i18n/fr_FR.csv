@@ -119,3 +119,6 @@
 "Mobile","Mobile"
 "E-mail","Adresse mail"
 "Cocote product type","Type de Produit"
+"Default types","Type de produit par defaut"
+"Only fill if all your products are specific type","Remplir uniquement si tous vos produits appartiennent à un type précis"
+"Update all products with default types","Mettre à jour le type pour tous les produits"
