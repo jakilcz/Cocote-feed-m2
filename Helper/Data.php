@@ -113,6 +113,7 @@ class Data extends AbstractHelper
 
         $collection->addAttributeToSelect('price');
         $collection->addAttributeToSelect('image');
+        $collection->addAttributeToSelect('meta_keyword');
         $collection->addAttributeToSelect('cocote_labels');
         $collection->addAttributeToSelect('cocote_categories');
         $collection->addAttributeToSelect('cocote_tags');
@@ -205,8 +206,10 @@ class Data extends AbstractHelper
             $url=$product->getProductUrl();
 
             $currentprod->appendChild($domtree->createElement('identifier', $product->getId()));
-            $currentprod->appendChild($domtree->createElement('price', $this->priceHelper->currency($product->getFinalPrice(), true, false)));
             $currentprod->appendChild($domtree->createElement('link', $url));
+            $currentprod->appendChild($domtree->createElement('keywords', $product->getData('meta_keyword')));
+
+            $currentprod->appendChild($domtree->createElement('price', $this->priceHelper->currency($product->getFinalPrice(), true, false)));
 
             $labels=explode(',', $product->getData('cocote_labels'));
             $labelsString=implode('|', array_unique($labels));
@@ -256,9 +259,6 @@ class Data extends AbstractHelper
             $placeOnline->setAttribute('road', $this->getConfigValue('cocote/location/place_online_road'));
             $placeOnline->setAttribute('zipcode', $this->getConfigValue('cocote/location/place_online_zipcode'));
             $placeOnline->setAttribute('city', $this->getConfigValue('cocote/location/place_online_city'));
-            $placeOnline->setAttribute('phone', $this->getConfigValue('cocote/location/place_online_phone'));
-            $placeOnline->setAttribute('mobile', $this->getConfigValue('cocote/location/place_online_mobile'));
-            $placeOnline->setAttribute('email', $this->getConfigValue('cocote/location/place_online_email'));
 
             $currentprod->appendChild($placesOnline);
             $placesOnline->appendChild($placeOnline);
@@ -272,9 +272,6 @@ class Data extends AbstractHelper
                 $place->setAttribute('road', $this->getConfigValue('cocote/location/place_online_road'));
                 $place->setAttribute('zipcode', $this->getConfigValue('cocote/location/place_online_zipcode'));
                 $place->setAttribute('city', $this->getConfigValue('cocote/location/place_online_city'));
-                $place->setAttribute('phone', $this->getConfigValue('cocote/location/place_online_phone'));
-                $place->setAttribute('mobile', $this->getConfigValue('cocote/location/place_online_mobile'));
-                $place->setAttribute('email', $this->getConfigValue('cocote/location/place_online_email'));
             } else {
                 $place->setAttribute('lat', $this->getConfigValue('cocote/location/place_onsite_latitude'));
                 $place->setAttribute('lon', $this->getConfigValue('cocote/location/place_onsite_longitude'));
@@ -292,6 +289,18 @@ class Data extends AbstractHelper
             $paymentOnsite=str_replace(',', '|', $this->getConfigValue('cocote/general/payment_onsite'));
             $place->appendChild($domtree->createElement('payment_onsite', $paymentOnsite));
 
+            $openingHours=$domtree->createElement('opening_hours');
+            $openingHours->setAttribute('monday', $this->getOpeningHours(0));
+            $openingHours->setAttribute('tuesday', $this->getOpeningHours(1));
+            $openingHours->setAttribute('wednesday', $this->getOpeningHours(2));
+            $openingHours->setAttribute('thursday', $this->getOpeningHours(3));
+            $openingHours->setAttribute('friday', $this->getOpeningHours(4));
+            $openingHours->setAttribute('saturday', $this->getOpeningHours(5));
+            $openingHours->setAttribute('sunday', $this->getOpeningHours(6));
+            $openingHours->setAttribute('additional_info', $this->getConfigValue('cocote/location/opening_hours_additional'));
+            $place->appendChild($openingHours);
+
+
             $shippingCostTag=$domtree->createElement('shipping_costs');
 
             $shippingCosts = $this->getConfigValue('cocote/general/shipping');
@@ -307,20 +316,22 @@ class Data extends AbstractHelper
                 }
             }
             $currentprod->appendChild($shippingCostTag);
-        }
 
-        $discountTag=$domtree->createElement('offer_list');
-        $discount = $this->getConfigValue('cocote/general/discount');
-        if ($discount) {
-            $discount = json_decode($discount);
-            foreach ($discount as $discountRow) {
-                $discountChoice=$domtree->createElement('offer');
-                $discountChoice->setAttribute('description', $discountRow->description);
-                $discountChoice->setAttribute('conditions', $discountRow->conditions);
-                $discountTag->appendChild($discountChoice);
+            $discountTag=$domtree->createElement('offer_list');
+            $discount = $this->getConfigValue('cocote/general/discount');
+            if ($discount) {
+                $discount = json_decode($discount);
+                foreach ($discount as $discountRow) {
+                    $discountChoice=$domtree->createElement('offer');
+                    $discountChoice->setAttribute('description', $discountRow->description);
+                    $discountChoice->setAttribute('conditions', $discountRow->conditions);
+                    $discountChoice->setAttribute('start', strtotime($discountRow->from_date.' '.$discountRow->from_time));
+                    $discountChoice->setAttribute('end', strtotime($discountRow->to_date.' '.$discountRow->to_time));
+                    $discountTag->appendChild($discountChoice);
+                }
             }
+            $currentprod->appendChild($discountTag);
         }
-        $currentprod->appendChild($discountTag);
 
         $domtree->save($filePath);
     }
@@ -340,5 +351,21 @@ class Data extends AbstractHelper
     public function getConfigValue($path)
     {
         return $this->scopeConfig->getValue($path, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+    }
+
+    private function getOpeningHours($i)
+    {
+        $start1=$this->getConfigValue('cocote/location/openinghours'.$i.'_1');
+        $end1=$this->getConfigValue('cocote/location/openinghours'.$i.'_2');
+        $start2=$this->getConfigValue('cocote/location/openinghours'.$i.'_3');
+        $end2=$this->getConfigValue('cocote/location/openinghours'.$i.'_4');
+        if (!$start1) {
+            return '';
+        }
+        $ret=$start1.'-'.$end1;
+        if ($start2) {
+            $ret.=';'.$start2.'-'.$end2;
+        }
+        return $ret;
     }
 }

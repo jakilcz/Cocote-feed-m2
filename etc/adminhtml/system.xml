@@ -210,16 +210,6 @@
                     <frontend_model>Cocote\Feed\Block\System\Config\Getcoordsonline</frontend_model>
                     <label>Get coordinates</label>
                 </field>
-                <field id="place_online_phone" translate="label,comment" type="text" sortOrder="5" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Telephone</label>
-                </field>
-                <field id="place_online_mobile" translate="label,comment" type="text" sortOrder="6" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Mobile</label>
-                </field>
-                <field id="place_online_email" translate="label,comment" type="text" sortOrder="7" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>E-mail</label>
-                </field>
-
                 <field id="place_online_latitude" translate="label,comment" type="text" sortOrder="8" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Latitude</label>
                 </field>
@@ -261,7 +251,14 @@
                 <field id="place_onsite_longitude" translate="label,comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Longitude</label>
                 </field>
-
+                <field id="opening_hours" translate="label,comment" sortOrder="31" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Opening hours</label>
+                    <comment>Indicate here the opening hours of your sales point. These times will be posted on your product sheets</comment>
+                    <frontend_model>Cocote\Feed\Block\System\Config\Openinghours</frontend_model>
+                </field>
+                <field id="opening_hours_additional" translate="label,comment" type="textarea" sortOrder="32" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Opening hours - additional info</label>
+                </field>
             </group>
             <group id="generate" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>Feed generating</label>

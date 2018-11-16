@@ -76,7 +76,6 @@ class InstallData implements InstallDataInterface
             ['code'=>'cocote_state','label'=>'Cocote state','source'=>'Cocote\Feed\Model\Config\Source\State','type'=>'select'],
             ['code'=>'cocote_salestypes','label'=>'Cocote salestypes','source'=>'Cocote\Feed\Model\Config\Source\Salestypes','type'=>'multiselect'],
             ['code'=>'cocote_payment_online','label'=>'Cocote payment online','source'=>'Cocote\Feed\Model\Config\Source\Payments','type'=>'multiselect'],
-//            ['code'=>'cocote_payment_onsite','label'=>'Cocote payment online','source'=>'Cocote\Feed\Model\Config\Source\Payments','type'=>'multiselect'],
             ['code'=>'cocote_types','label'=>'Cocote types','source'=>'Cocote\Feed\Model\Config\Source\Types','type'=>'multiselect'],
 
         ];

@@ -466,3 +466,7 @@ only screen and (min-resolution: 1.5dppx) {
 .data-grid-cell-content {
     overflow: visible;
 }
+
+.datepicker {
+    min-width: 85px;
+}

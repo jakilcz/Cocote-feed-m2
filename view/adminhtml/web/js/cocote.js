@@ -2,6 +2,7 @@ require(
     [
         'jquery',
         'mage/translate',
+        "mage/calendar"
     ],
     function ($) {
 
@@ -83,9 +84,38 @@ require(
             checkTheSameAddress();
         });
 
+        jQuery(".action-add" ).click(function() {
+            jQuery(".datepicker" ).datepicker();
+            setTimes();
+        });
+
         if(jQuery("#cocote_general_store").length==1) {
             jQuery("#row_cocote_general_store").hide();
         }
+
+        jQuery.datepicker.regional['fr'] = {
+            closeText: 'Fermer',
+            prevText: 'Précédent',
+            nextText: 'Suivant',
+            currentText: 'Aujourd\'hui',
+            monthNames: ['Janvier','Février','Mars','Avril','Mai','Juin',
+                'Juillet','Août','Septembre','Octobre','Novembre','Décembre'],
+            monthNamesShort: ['Janv.','Févr.','Mars','Avril','Mai','Juin',
+                'Juil.','Août','Sept.','Oct.','Nov.','Déc.'],
+            dayNames: ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'],
+            dayNamesShort: ['Dim.','Lun.','Mar.','Mer.','Jeu.','Ven.','Sam.'],
+            dayNamesMin: ['D','L','M','M','J','V','S'],
+            weekHeader: 'Sem.',
+            dateFormat: 'dd-mm-yy',
+            firstDay: 1,
+            isRTL: false,
+            showMonthAfterYear: false,
+            yearSuffix: ''};
+        jQuery.datepicker.setDefaults($.datepicker.regional['fr']);
+
+        jQuery(".datepicker" ).datepicker();
+        setTimes();
+
 
     }
 );
@@ -113,4 +143,17 @@ function checkTheSameAddress() {
         jQuery("#row_cocote_location_place_onsite_mobile").show();
         jQuery("#row_cocote_location_place_onsite_email").show();
     }
+}
+
+function setTimes() {
+    jQuery('.from_time').each(function() {
+        if(!jQuery(this).val()) {
+            jQuery(this).val('00:00');
+        }
+    });
+    jQuery('.to_time').each(function() {
+        if(!jQuery(this).val()) {
+            jQuery(this).val('23:59');
+        }
+    });
 }
