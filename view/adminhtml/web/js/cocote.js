@@ -128,9 +128,6 @@ function checkTheSameAddress() {
         jQuery("#row_cocote_location_place_onsite_longitude").hide();
         jQuery("#row_cocote_location_place_onsite_latitude").hide();
         jQuery("#row_cocote_location_place_onsite_getcoordinates").hide();
-        jQuery("#row_cocote_location_place_onsite_phone").hide();
-        jQuery("#row_cocote_location_place_onsite_mobile").hide();
-        jQuery("#row_cocote_location_place_onsite_email").hide();
     }
     else {
         jQuery("#row_cocote_location_place_onsite_road").show();
@@ -139,9 +136,6 @@ function checkTheSameAddress() {
         jQuery("#row_cocote_location_place_onsite_longitude").show();
         jQuery("#row_cocote_location_place_onsite_latitude").show();
         jQuery("#row_cocote_location_place_onsite_getcoordinates").show();
-        jQuery("#row_cocote_location_place_onsite_phone").show();
-        jQuery("#row_cocote_location_place_onsite_mobile").show();
-        jQuery("#row_cocote_location_place_onsite_email").show();
     }
 }
 

@@ -233,12 +233,14 @@
                 </field>
                 <field id="place_onsite_phone" translate="label,comment" type="text" sortOrder="24" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Telephone</label>
+                    <comment>If you are selling on the spot, indicate here the phone from which your shop is reachable</comment>
                 </field>
                 <field id="place_onsite_mobile" translate="label,comment" type="text" sortOrder="25" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Mobile</label>
                 </field>
                 <field id="place_onsite_email" translate="label,comment" type="text" sortOrder="26" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>E-mail</label>
+                    <comment>If you are selling on the spot, indicate here the mail from which your shop is reachable</comment>
                 </field>
                 <field id="place_onsite_getcoordinates" translate="label comment" type="button" sortOrder="28" showInDefault="1" showInWebsite="0" showInStore="0">
                     <frontend_model>Cocote\Feed\Block\System\Config\Getcoordsonsite</frontend_model>
@@ -258,6 +260,7 @@
                 </field>
                 <field id="opening_hours_additional" translate="label,comment" type="textarea" sortOrder="32" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Opening hours - additional info</label>
+                    <comment>If you sell locally, you can enter additional information about your hours here.</comment>
                 </field>
             </group>
             <group id="generate" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
@@ -266,13 +269,13 @@
                     <label>Generated file path</label>
                     <comment>Directory where feed file will be placed. Counts from /pub directory. No slashes at the end or begining needed. If folder doesn't exist we'll try to create it</comment>
                 </field>
-                <field id="generate" translate="label comment" type="button" sortOrder="2" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <frontend_model>Cocote\Feed\Block\System\Config\Generatebutton</frontend_model>
-                    <label>Generate feed</label>
-                </field>
-                <field id="in_stock_only" translate="label,comment" type="checkbox" sortOrder="3" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="in_stock_only" translate="label,comment" type="checkbox" sortOrder="2" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Export only 'in stock' products</label>
                     <frontend_model>Cocote\Feed\Block\System\Config\CheckboxInStock</frontend_model>
+                </field>
+                <field id="generate" translate="label comment" type="button" sortOrder="3" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <frontend_model>Cocote\Feed\Block\System\Config\Generatebutton</frontend_model>
+                    <label>Generate feed</label>
                 </field>
                 <field id="link" translate="label comment" type="button" sortOrder="4" showInDefault="1" showInWebsite="0" showInStore="0">
                     <frontend_model>Cocote\Feed\Block\System\Config\Linkfeed</frontend_model>

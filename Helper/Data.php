@@ -278,11 +278,11 @@ class Data extends AbstractHelper
                 $place->setAttribute('road', $this->getConfigValue('cocote/location/place_onsite_road'));
                 $place->setAttribute('zipcode', $this->getConfigValue('cocote/location/place_onsite_zipcode'));
                 $place->setAttribute('city', $this->getConfigValue('cocote/location/place_onsite_city'));
-                $place->setAttribute('phone', $this->getConfigValue('cocote/location/place_onsite_phone'));
-                $place->setAttribute('mobile', $this->getConfigValue('cocote/location/place_onsite_mobile'));
-                $place->setAttribute('email', $this->getConfigValue('cocote/location/place_onsite_email'));
             }
 
+            $place->setAttribute('phone', $this->getConfigValue('cocote/location/place_onsite_phone'));
+            $place->setAttribute('mobile', $this->getConfigValue('cocote/location/place_onsite_mobile'));
+            $place->setAttribute('email', $this->getConfigValue('cocote/location/place_onsite_email'));
             $currentprod->appendChild($placesOnsite);
             $placesOnsite->appendChild($place);
 
@@ -299,7 +299,6 @@ class Data extends AbstractHelper
             $openingHours->setAttribute('sunday', $this->getOpeningHours(6));
             $openingHours->setAttribute('additional_info', $this->getConfigValue('cocote/location/opening_hours_additional'));
             $place->appendChild($openingHours);
-
 
             $shippingCostTag=$domtree->createElement('shipping_costs');
 

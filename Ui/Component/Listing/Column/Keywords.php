@@ -2,9 +2,9 @@
 
 namespace Cocote\Feed\Ui\Component\Listing\Column;
 
-class Distance extends \Magento\Ui\Component\Listing\Columns\Column
+class Keywords extends \Magento\Ui\Component\Listing\Columns\Column
 {
-    public $attribute='cocote_allowed_distance';
+    public $attribute='meta_keyword';
 
     protected $backendUrl;
 
