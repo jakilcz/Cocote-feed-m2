@@ -34,7 +34,6 @@ class OrderObserver implements ObserverInterface
         try {
             $invoice=$observer->getEvent()->getInvoice();
             $orderId =$invoice->getOrderId();
-            //$orderId = $observer->getEvent()->getOrderIds()[0];
             $order = $this->orderRepository->get($orderId);
 
             $data=[
