@@ -28,8 +28,11 @@ Telecharger ce module (via le boutton ci-dessus 'clone or dowload') sur votre se
 Ensuite, lancer en ligne de commande:
 
 #clean cache
+
 php bin/magento c:c
+
 #upgrade
+
 php bin/magento setup:upgrade
 
 3) Activer le cache Cocote
