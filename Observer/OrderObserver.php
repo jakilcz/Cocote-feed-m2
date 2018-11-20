@@ -32,7 +32,9 @@ class OrderObserver implements ObserverInterface
             throw new \ErrorException($errstr, $errno, 0, $errfile, $errline);
         });
         try {
-            $orderId = $observer->getEvent()->getOrderIds()[0];
+            $invoice=$observer->getEvent()->getInvoice();
+            $orderId =$invoice->getOrderId();
+            //$orderId = $observer->getEvent()->getOrderIds()[0];
             $order = $this->orderRepository->get($orderId);
 
             $data=[
