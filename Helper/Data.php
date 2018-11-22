@@ -209,7 +209,15 @@ class Data extends AbstractHelper
             $currentprod->appendChild($domtree->createElement('link', $url));
             $currentprod->appendChild($domtree->createElement('keywords', $product->getData('meta_keyword')));
 
-            $currentprod->appendChild($domtree->createElement('price', $this->priceHelper->currency($product->getFinalPrice(), true, false)));
+
+            if($product->getTypeId()=='bundle') {
+                $rawPrice=$product->getPriceInfo()->getPrice('final_price')->getMinimalPrice()->getValue();
+                $price=$this->priceHelper->currency($rawPrice, true, false);
+            }
+            else {
+                $price=$this->priceHelper->currency($product->getFinalPrice(), true, false);
+            }
+            $currentprod->appendChild($domtree->createElement('price', $price));
 
             $labels=explode(',', $product->getData('cocote_labels'));
             $labelsString=implode('|', array_unique($labels));
@@ -224,9 +232,16 @@ class Data extends AbstractHelper
             $currentprod->appendChild($domtree->createElement('tags', $tagsString));
 
             foreach ($this->mapping as $nodeName => $attrName) {
-                if ($product->getData($attrName)) {
-                    $value=$product->getResource()->getAttribute($attrName)->getFrontend()->getValue($product);
-                    $currentprod->appendChild($domtree->createElement($nodeName, htmlspecialchars($value)));
+                if($nodeName=='description') {
+                    $descTag=$domtree->createElement('description');
+                    $descTag->appendChild($domtree->createCDATASection($product->getData($attrName)));
+                    $currentprod->appendChild($descTag);
+                }
+                else {
+                    if ($product->getData($attrName)) {
+                        $value=$product->getResource()->getAttribute($attrName)->getFrontend()->getValue($product);
+                        $currentprod->appendChild($domtree->createElement($nodeName, htmlspecialchars($value)));
+                    }
                 }
             }
 

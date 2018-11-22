@@ -146,7 +146,7 @@
                     <comment>Only fill if all your products are specific type</comment>
                     <source_model>Cocote\Feed\Model\Config\Source\Types</source_model>
                 </field>
-                <field id="salestypes_sync" translate="label comment" type="button" sortOrder="28" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="types_sync" translate="label comment" type="button" sortOrder="28" showInDefault="1" showInWebsite="0" showInStore="0">
                     <frontend_model>Cocote\Feed\Block\System\Config\Syncbutton</frontend_model>
                     <label>Update all products with default types</label>
                 </field>
