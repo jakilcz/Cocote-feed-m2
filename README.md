@@ -1,4 +1,4 @@
-Magento 2 Module for Cocote.com website.
+# Magento 2 Module for Cocote.com website.
 
 This module generates feed and communicates with cocote.com website to let it aggregate your products data.
 
@@ -13,7 +13,7 @@ File will be refreshed each day at 3.00 A.M. by cron tasks.
 
 
 
-Plugin Cocote pour Magento 2
+# Plugin Cocote pour Magento 2
 
 Ce module communique avec Cocote.com et genere un flux xml de vos offres produits.
 
@@ -27,9 +27,12 @@ Telecharger ce module (via le boutton ci-dessus 'clone or dowload') sur votre se
 
 Ensuite, lancer en ligne de commande:
 
-# clean cache
+#clean cache
+
 php bin/magento c:c
-# upgrade
+
+#upgrade
+
 php bin/magento setup:upgrade
 
 3) Activer le cache Cocote

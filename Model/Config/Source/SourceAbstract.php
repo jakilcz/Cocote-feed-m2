@@ -29,7 +29,7 @@ class SourceAbstract extends \Magento\Eav\Model\Entity\Attribute\Source\Abstract
             if (is_array($labels)) {
                 $data=[];
                 foreach ($labels as $labelName => $labelCode) {
-                    $data[]=['label'=>$labelName,'value'=>$labelCode];      //here we can add translation
+                    $data[]=['label'=>$labelName,'value'=>$labelCode];
                 }
                 $options[]=['label'=>$group,'value'=>$data];
             } else {

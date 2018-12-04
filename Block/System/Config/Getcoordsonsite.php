@@ -18,9 +18,7 @@ class Getcoordsonsite extends Field
 
     protected function _getElementHtml(\Magento\Framework\Data\Form\Element\AbstractElement $element)
     {
-
         $errorMessage=addslashes(__("temporary geolocalisation issue , please retry after or insert coord manually"));
-        $key='AIzaSyBzNYZwGM07VrBKgH_xbuRwsOYm8IJfKyk';
 
         $html =$this->getLayout()->createBlock(
             'Magento\Backend\Block\Widget\Button'
@@ -34,27 +32,25 @@ class Getcoordsonsite extends Field
         ->toHtml();
 
         $html .= "
-
-<script >
  function getCoordsOnsite() {
- url='https://maps.googleapis.com/maps/api/geocode/json';
+ url='https://fr.cocote.com/api/connector/geocoding';
  jQuery.ajax({
+    type: 'POST',
     url: url,
-    method: 'GET',
-    dataType:'json',
     data: {
-        key: '".$key."',
-        address: jQuery('#cocote_location_place_onsite_road').val()+' '+jQuery('#cocote_location_place_onsite_city').val()+' '+jQuery('#cocote_location_place_onsite_zipcode').val()
+        shopId: jQuery('#cocote_general_shop_id').val(),
+        privateKey: jQuery('#cocote_general_shop_key').val(),
+        query: jQuery('#cocote_location_place_onsite_road').val()+' '+jQuery('#cocote_location_place_onsite_city').val()+' '+jQuery('#cocote_location_place_onsite_zipcode').val()
     }
 })
 .done(function(data) {
-    if(data['status']!='OK') {
-        alert(data.error_message);
+    if(data.Response.status==false) {
+        alert(data.Response.errors[0]);
     }
     else {
-        lat=data.results[0].geometry.location.lat;
+        lat=data.Response.result.lat;
         jQuery('#cocote_location_place_onsite_latitude').val(lat);
-        lng=data.results[0].geometry.location.lng;
+        lng=data.Response.result.lng;
         jQuery('#cocote_location_place_onsite_longitude').val(lng);
     }
 })
