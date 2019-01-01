@@ -28,6 +28,10 @@ class Generate extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->helper->generateFeed();
+        try {
+            $this->helper->generateFeed();
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+        }
     }
 }

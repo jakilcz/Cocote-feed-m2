@@ -52,7 +52,7 @@ class SourceAbstract extends \Magento\Eav\Model\Entity\Attribute\Source\Abstract
                 'unsigned' => false,
                 'default' => null,
                 'extra' => null,
-                'type' => Table::TYPE_VARCHAR,
+                'type' => Table::TYPE_TEXT,
                 'nullable' => true,
                 'comment' => 'Cocote' . $attributeCode . ' column',
             ],

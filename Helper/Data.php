@@ -23,6 +23,8 @@ class Data extends AbstractHelper
     protected $configInterface;
     protected $stockHelper;
     protected $cacheTypeList;
+    protected $resource;
+    protected $timeZone;
 
     public function __construct(
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
@@ -35,6 +37,8 @@ class Data extends AbstractHelper
         StoreManagerInterface $storeManager,
         \Magento\Framework\Pricing\Helper\Data $priceHelper,
         \Magento\Framework\App\Cache\TypeListInterface $cacheTypeList,
+        \Magento\Framework\App\ResourceConnection $resource,
+        \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezone,
         Context $context
     ) {
         $this->scopeConfig = $scopeConfig;
@@ -45,7 +49,9 @@ class Data extends AbstractHelper
         $this->storeManager=$storeManager;
         $this->priceHelper=$priceHelper;
         $this->stockHelper=$stockHelper;
+        $this->timeZone=$timezone;
         $this->cacheTypeList = $cacheTypeList;
+        $this->resource = $resource;
 
         parent::__construct($context);
     }
@@ -122,7 +128,6 @@ class Data extends AbstractHelper
         $collection->addAttributeToSelect('cocote_state');
         $collection->addAttributeToSelect('cocote_salestypes');
         $collection->addAttributeToSelect('cocote_payment_online');
-        $collection->addAttributeToSelect('cocote_payment_onsite');
         $collection->addAttributeToSelect('cocote_allowed_distance');
         $collection->addAttributeToSelect('cocote_types');
         $collection->addFieldToFilter('status', ['eq' => \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED]);
@@ -140,6 +145,8 @@ class Data extends AbstractHelper
 
     public function generateFeed()
     {
+        $validate=[];
+
         $filePath=$this->getFilePath();
         $store = $this->storeManager->getStore();
 
@@ -171,6 +178,10 @@ class Data extends AbstractHelper
 
         $xmlRoot = $domtree->createElement("shop");
         $xmlRoot = $domtree->appendChild($xmlRoot);
+
+        $generated = $domtree->createElement('generated',$this->timeZone->date()->format('Y-m-d H:i:s'));
+        $generated->setAttribute('cms', 'magento');
+        $xmlRoot->appendChild($generated);
 
         $sponsorship=$domtree->createElement('sponsorship');
         $sponsorship->setAttribute('godfather_advantage', $this->getConfigValue('cocote/general/godfather_advantage'));
@@ -253,8 +264,9 @@ class Data extends AbstractHelper
                 $currentprod->appendChild($domtree->createElement('image_link2', $imageSecondaryLink));
             }
 
-            $salesTypes=str_replace(',', '|', $product->getData('cocote_salestypes'));
-            $currentprod->appendChild($domtree->createElement('sale_type', $salesTypes));
+            $salesTypes = explode(',', $product->getData('cocote_salestype'));
+            $salesTypesString = implode('|', array_unique($salesTypes));
+            $currentprod->appendChild($domtree->createElement('sale_type', $salesTypesString));
 
             $types=str_replace(',', '|', $product->getData('cocote_types'));
             $currentprod->appendChild($domtree->createElement('type', $types));
@@ -269,11 +281,19 @@ class Data extends AbstractHelper
 
             $placesOnline=$domtree->createElement('places_online');
             $placeOnline=$domtree->createElement('place_online');
-            $placeOnline->setAttribute('lat', $this->getConfigValue('cocote/location/place_online_latitude'));
-            $placeOnline->setAttribute('lon', $this->getConfigValue('cocote/location/place_online_longitude'));
-            $placeOnline->setAttribute('road', $this->getConfigValue('cocote/location/place_online_road'));
-            $placeOnline->setAttribute('zipcode', $this->getConfigValue('cocote/location/place_online_zipcode'));
-            $placeOnline->setAttribute('city', $this->getConfigValue('cocote/location/place_online_city'));
+
+            $placeOnlineLat=$this->getConfigValue('cocote/location/place_online_latitude');
+            $placeOnlineLon=$this->getConfigValue('cocote/location/place_online_longitude');
+            $placeOnlineRoad=$this->getConfigValue('cocote/location/place_online_road');
+            $placeOnlineZipcode=$this->getConfigValue('cocote/location/place_online_zipcode');
+            $placeOnlineCity=$this->getConfigValue('cocote/location/place_online_city');
+
+
+            $placeOnline->setAttribute('lat', $placeOnlineLat);
+            $placeOnline->setAttribute('lon', $placeOnlineLon);
+            $placeOnline->setAttribute('road', $placeOnlineRoad);
+            $placeOnline->setAttribute('zipcode', $placeOnlineZipcode);
+            $placeOnline->setAttribute('city', $placeOnlineCity);
 
             $currentprod->appendChild($placesOnline);
             $placesOnline->appendChild($placeOnline);
@@ -282,11 +302,11 @@ class Data extends AbstractHelper
             $place=$domtree->createElement('place_onsite');
 
             if ($this->getConfigValue('cocote/location/place_online_the_same')) {
-                $place->setAttribute('lat', $this->getConfigValue('cocote/location/place_online_latitude'));
-                $place->setAttribute('lon', $this->getConfigValue('cocote/location/place_online_longitude'));
-                $place->setAttribute('road', $this->getConfigValue('cocote/location/place_online_road'));
-                $place->setAttribute('zipcode', $this->getConfigValue('cocote/location/place_online_zipcode'));
-                $place->setAttribute('city', $this->getConfigValue('cocote/location/place_online_city'));
+                $place->setAttribute('lat', $placeOnlineLat);
+                $place->setAttribute('lon', $placeOnlineLon);
+                $place->setAttribute('road', $placeOnlineRoad);
+                $place->setAttribute('zipcode', $placeOnlineZipcode);
+                $place->setAttribute('city', $placeOnlineCity);
             } else {
                 $place->setAttribute('lat', $this->getConfigValue('cocote/location/place_onsite_latitude'));
                 $place->setAttribute('lon', $this->getConfigValue('cocote/location/place_onsite_longitude'));
@@ -345,9 +365,107 @@ class Data extends AbstractHelper
                 }
             }
             $currentprod->appendChild($discountTag);
+
+            if ($product->getData('cocote_labels')) {
+                $validate['labels']=1;
+            }
+            if ($product->getData('cocote_categories')) {
+                $validate['categories']=1;
+            }
+            if ($product->getData('cocote_targets')) {
+                $validate['targets']=1;
+            }
+            if ($product->getData('cocote_types')) {
+                $validate['types']=1;
+            }
+            if($product->getData('cocote_state')) {
+                $validate['state']=1;
+            }
+            if($product->getData('cocote_producer')) {
+                $validate['producer']=1;
+            }
+            if ($product->getData('cocote_salestypes')) {
+                $validate['sales_types']=1;
+                if(in_array('online',$salesTypes)) {
+                    $validate['sales_type_online_present']=1;
+                    if (!$product->getData('cocote_payment_online')) {
+                        $validate['payment_online_error']=1;
+                    }
+                }
+                if(in_array('onsite',$salesTypes)) {
+                    $validate['sales_type_onsite_present']=1;
+                }
+            }
+        }
+
+        $validateErrors=array();
+        $showStar=0;
+        if (!isset ($validate['categories'])) {
+            $validateErrors[]='le champ category n\'est pas renseigné *';
+            $showStar=1;
+        }
+        if (!isset ($validate['state'])) {
+            $validateErrors[]='le champ \'état des produits (neuf/occasion)\' n\'est pas renseigné *';
+            $showStar=1;
+        }
+        if (!isset ($validate['producer'])) {
+            $validateErrors[]='le champ \'producteur / revendeur\' n\'est pas renseigné *';
+            $showStar=1;
+        }
+
+        if (!isset ($validate['sales_types'])) {
+            $validateErrors[]='le champ \'Type de vente (en ligne/ sur place) n\'est pas renseigné';
+        }
+        if (isset ($validate['payment_online_error'])) {
+            $validateErrors[]='le champ \'Paiement en ligne\' est vide alors que des produits sont vendus en ligne';
+        }
+
+        if (isset ($validate['sales_type_online_present']) && !$shippingCosts) {
+            $validateErrors[]='le champ \'Livraison\' n\'est pas renseigné alors que des produits sont vendus sur place';
+        }
+
+        if (!$placeOnlineCity || !$placeOnlineZipcode || !$placeOnlineLat || !$placeOnlineLon || !$placeOnlineRoad) {
+            $validateErrors[]='Votre adresse est vide, merci de la completer';
+        }
+
+        if (isset($validate['sales_type_onsite_present'])) {
+            if (!$paymentOnsite) {
+                $validateErrors[]='le champ \'Paiement sur place\' n\'est pas renseigné alors que des produits sont vendus sur place';
+            }
+
+            if(!$this->getConfigValue('cocote/location/place_onsite_phone')) {
+                $validateErrors[]='Vous vendez au moins un produit sur place or le champ Telephone est vide';
+            }
+            if(!$this->getConfigValue('cocote/location/place_onsite_mobile')) {
+                $validateErrors[]='Vous vendez au moins un produit sur place or le champ Mobile est vide';
+            }
+            if(!$this->getConfigValue('cocote/location/place_onsite_email')) {
+                $validateErrors[]='Vous vendez au moins un produit sur place or le champ Mail est vide';
+            }
+            if(!$this->getOpeningHours(0) && !$this->getOpeningHours(1) && !$this->getOpeningHours(2) &&
+                !$this->getOpeningHours(3) && !$this->getOpeningHours(4) && !$this->getOpeningHours(5) && !$this->getOpeningHours(6))
+            {
+                $validateErrors[]='Vous vendez au moins un produit sur place or Vos horaires d\'ouvertures ne sont pas indiqués';
+            }
+        }
+
+        if(sizeof($validateErrors)) {
+            $errorText='Les erreurs suivantes ont été détectes et empechent la generation de votre flux, merci de les corriger.<br />';
+            foreach($validateErrors as $error) {
+                $errorText.=$error.'</br>';
+            }
+
+            if($showStar) {
+                $errorText.='*: Avez vous bien renseigné / enregistré une valeur puis cliqué sur le bouton correspondant \'Commencez des maintenant\' en dessous du champ?';
+            }
+
+            $this->storeManager->setCurrentStore('admin');
+            throw new \Exception($errorText);
         }
 
         $domtree->save($filePath);
+        return $validate;
+
     }
 
     public function mergeText($string)
@@ -382,4 +500,53 @@ class Data extends AbstractHelper
         }
         return $ret;
     }
+
+    public function updateFlat($productId, $attribute, $value)
+    {
+        if(!$this->getConfigValue('catalog/frontend/flat_catalog_product')) { //flat is not enabled, no need to update
+            return true;
+        }
+        //get default store
+
+        $storeCode=$this->getConfigValue('cocote/general/store');
+        if (!$storeCode) {
+            $storeCode='default';
+        }
+
+        $stores = $this->storeManager->getStores(true, false);
+        foreach($stores as $store){
+            if($store->getCode() === $storeCode){
+                $storeId = $store->getId();
+            }
+        }
+
+        $tableName=$this->getFlatTableName($storeId);
+
+        $connection = $this->resource->getConnection();
+
+        $sql='UPDATE '.$tableName.' SET '.$attribute.'="'.$value.'"';
+
+        if($productId) {
+            $sql.=' WHERE entity_id='.$productId;
+        }
+        $connection->query($sql);
+
+    }
+
+    public function getTable($name)
+    {
+        return $this->resource->getTableName($name);
+    }
+
+    /**
+     * Retrieve Catalog Product Flat Table name
+     *
+     * @param int $storeId
+     * @return string
+     */
+    public function getFlatTableName($storeId)
+    {
+        return sprintf('%s_%s', $this->getTable('catalog_product_flat'), $storeId);
+    }
+
 }

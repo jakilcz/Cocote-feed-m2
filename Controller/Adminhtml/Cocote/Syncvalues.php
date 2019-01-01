@@ -15,6 +15,7 @@ class Syncvalues extends \Magento\Backend\App\Action
     protected $resultRedirect;
     protected $messageManager;
     protected $request;
+    protected $helper;
 
     /**
      * Constructor
@@ -30,7 +31,8 @@ class Syncvalues extends \Magento\Backend\App\Action
         \Magento\Catalog\Model\Product\Visibility $productVisibility,
         \Magento\Framework\Controller\ResultFactory $result,
         \Magento\Framework\Message\ManagerInterface $messageManager,
-        \Magento\Framework\App\Request\Http $request
+        \Magento\Framework\App\Request\Http $request,
+        \Cocote\Feed\Helper\Data $helper
     ) {
         parent::__construct($context);
         $this->resultPageFactory = $resultPageFactory;
@@ -40,6 +42,7 @@ class Syncvalues extends \Magento\Backend\App\Action
         $this->resultRedirect = $result;
         $this->messageManager = $messageManager;
         $this->request = $request;
+        $this->helper=$helper;
     }
 
     public function execute()
@@ -49,8 +52,8 @@ class Syncvalues extends \Magento\Backend\App\Action
         $value=$this->scopeConfig->getValue('cocote/general/'.$attribute, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
 
         try {
-            $prodctIds=$this->getProductCollectionIds();
-            $this->updateAttributeValue($prodctIds, $attribute, $value);
+            $productIds=$this->getProductCollectionIds();
+            $this->updateAttributeValue($productIds, $attribute, $value);
             $this->messageManager->addSuccessMessage(__($attribute." have been updated"));
         } catch (\Exception $e) {
                 $this->messageManager->addErrorMessage($e->getMessage());
@@ -84,5 +87,6 @@ class Syncvalues extends \Magento\Backend\App\Action
                 $action->updateAttributes([$productId], [$attributeName => $value], $storeId);
             }
         }
+        $this->helper->updateFlat(null, $attributeName, $value);
     }
 }

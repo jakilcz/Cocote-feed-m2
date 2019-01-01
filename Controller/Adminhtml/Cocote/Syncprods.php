@@ -16,6 +16,7 @@ class Syncprods extends \Magento\Backend\App\Action
     protected $messageManager;
     protected $request;
     protected $resultJsonFactory;
+    protected $helper;
 
     /**
      * Constructor
@@ -32,7 +33,9 @@ class Syncprods extends \Magento\Backend\App\Action
         \Magento\Framework\Controller\ResultFactory $result,
         \Magento\Framework\Message\ManagerInterface $messageManager,
         \Magento\Framework\App\Request\Http $request,
-        \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory
+        \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory,
+         \Cocote\Feed\Helper\Data $helper
+
     ) {
         parent::__construct($context);
         $this->resultPageFactory = $resultPageFactory;
@@ -43,6 +46,7 @@ class Syncprods extends \Magento\Backend\App\Action
         $this->messageManager = $messageManager;
         $this->request = $request;
         $this->resultJsonFactory=$resultJsonFactory;
+        $this->helper=$helper;
     }
 
 
@@ -55,22 +59,20 @@ class Syncprods extends \Magento\Backend\App\Action
             $value=implode(',', $value);
         }
 
-        $this->updateAttributeValue([$id], $attribute, $value);
+        $this->updateAttributeValue($id, $attribute, $value);
         $message=__('Product updated');
         return  $this->resultJsonFactory->create()->setData(['msg' => $message]);
     }
 
-    public function updateAttributeValue($prodIds, $attribute, $value)
+    public function updateAttributeValue($productId, $attribute, $value)
     {
         set_time_limit(0); // unlimited max execution time
         $storeId=0;
 
         $action = $this->_objectManager->get('\Magento\Catalog\Model\ResourceModel\Product\Action');
 
-        foreach ($prodIds as $productId) {
-            if ($productId) {
-                $action->updateAttributes([$productId], [$attribute => $value], $storeId);
-            }
-        }
+        $action->updateAttributes([$productId], [$attribute => $value], $storeId);
+        $this->helper->updateFlat($productId, $attribute, $value);
+
     }
 }
